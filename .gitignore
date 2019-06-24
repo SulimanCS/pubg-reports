@@ -2,3 +2,5 @@ scriptpubg
 TOKENS.csv
 draft.py
 *.swp
+embed*
+notes.txt

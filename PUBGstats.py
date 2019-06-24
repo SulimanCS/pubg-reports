@@ -104,7 +104,7 @@ def getMatchInfo(matchID):
 
 def matchAnalysis():
   
-    log = {'name': None, 'kills': None, 'knocks': None, }
+    log = {'name': None, 'kills': None, 'knocks': None, 'assists': None}
     with open ('matchdata/test.json', 'r') as playerFile:
         playerData = json.load(playerFile)
         for info in playerData:
@@ -121,8 +121,13 @@ def matchAnalysis():
                 #print(True)
                 print(report['attributes']['stats']['name'])
                 if report['attributes']['stats']['name'] == 'stx0':
-                    print('kills: {}'.format(report['attributes']['stats']['kills']))
-                    return
+                    #print('kills: {}'.format(report['attributes']['stats']['kills']))
+                    log['name'] = report['attributes']['stats']['name']
+                    log['kills'] = report['attributes']['stats']['kills']
+                    log['knocks'] = report['attributes']['stats']['DBNOs']
+                    log['assists'] = report['attributes']['stats']['assists']
+
+                    return log
             
         '''
         for info in playerData:
@@ -148,7 +153,8 @@ def main():
     #getPlayerInfo('stx0')
     #matchID = getLatestMatch('stx0')
     #getMatchInfo(matchID)
-    matchAnalysis()
+    log = matchAnalysis()
+    print(log)
 
 
 # init needs to be here when imported to another .py file
