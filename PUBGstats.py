@@ -149,14 +149,90 @@ def matchAnalysis(player):
 
                     return log
             
+#def checkNewMatch(player, currentMatchID):
+#
+#    matchID = getLatestMatch(player)
+#    if matchID == currentMatchID:
+#        return False
+#    else:
+#        return True
+#
+
+global matchID1, matchID2
+matchID1 = '1' 
+matchID2 = None
+def testnewmatch():
+
+    global matchID1, matchID2
+    print('matchID1,2: {} and {}'.format(matchID1, matchID2))
+    
+    #matchID = '8199d282-4576-4d4e-9726-8a8dcfdb6c' 
+    #return checkNewMatch('stx0', matchID)
+    getPlayerInfo('stx0')
+    getPlayerInfo('kojx')
+
+    # store the match ID of the last played game
+    # once it gets updated, we know that the players
+    # entered a new game
+    if matchID1 == None and matchID2 == None:
+        matchID1 = getLatestMatch('stx0')
+        matchID2 = getLatestMatch('kojx')
+        print('YES')
+        return
+
+    currentMatchID1 = getLatestMatch('stx0')
+    currentMatchID2 = getLatestMatch('kojx')
+    
+    # if current match ID matches with the previous
+    # one then the players did not play a new match
+    # therefore, return/exit
+    if currentMatchID1 == matchID1 and currentMatchID2 == matchID2:
+        print('YES2')
+        return
+    
+    # if the routine survived the returns
+    # then it means that the players entered
+    # a new match
+
+    # TODO this is for duos only currently
+    # support for solo and squads will come
+    # in the later versions
+
+    # since players entered a new match
+    # record their game stats and set 
+    # the ID of the match
+    logP1 = matchAnalysis('stx0')
+    logP2 = matchAnalysis('kojx')
+    matchID1 = currentMatchID1
+    matchID2 = currentMatchID2
+    return logP1, logP2
+
+
+    
 
 def main():
 
-    getPlayerInfo('stx0')
-    matchID = getLatestMatch('stx0')
-    getMatchInfo(matchID)
-    log = matchAnalysis('stx0')
-    print(log)
+    #getPlayerInfo('stx0')
+    #getPlayerInfo('kojx')
+    #matchID1 = getLatestMatch('stx0')
+    #matchID2 = getLatestMatch('kojx')
+
+    #--------------------------
+
+    #getPlayerInfo('stx0')
+    #matchID = getLatestMatch('stx0')
+    #getMatchInfo(matchID)
+    #log = matchAnalysis('stx0')
+    #print(log)
+
+    #--------------------------
+
+    result = testnewmatch()
+    print('result is: {}'.format(result))
+    result = testnewmatch()
+    print('result is: {}'.format(result))
+
+
 
 
 # init needs to be here when imported to another .py file

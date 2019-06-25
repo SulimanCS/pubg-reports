@@ -2,15 +2,15 @@
     "data": [
         {
             "type": "player",
-            "id": "account.9bfbd8de2a3b47b18e6d5934c291ba96",
+            "id": "account.b63c8d83883a42c3893fc820e273c631",
             "attributes": {
+                "titleId": "bluehole-pubg",
                 "shardId": "steam",
                 "createdAt": "2019-06-25T08:36:21Z",
                 "updatedAt": "2019-06-25T08:36:21Z",
                 "patchVersion": "",
-                "name": "stx0",
-                "stats": null,
-                "titleId": "bluehole-pubg"
+                "name": "kojx",
+                "stats": null
             },
             "relationships": {
                 "assets": {
@@ -200,6 +200,14 @@
                         },
                         {
                             "type": "match",
+                            "id": "30ab7892-0054-414d-9fe7-3bc8d79c2f49"
+                        },
+                        {
+                            "type": "match",
+                            "id": "00c6e3dc-87da-44f8-963c-570d1f04d9d9"
+                        },
+                        {
+                            "type": "match",
                             "id": "c9905f94-5c46-4f6f-a617-e687b106212a"
                         },
                         {
@@ -304,6 +312,10 @@
                         },
                         {
                             "type": "match",
+                            "id": "81898ed9-06b5-4c65-9cb0-10f3a00c3cf7"
+                        },
+                        {
+                            "type": "match",
                             "id": "7e321d6f-5d55-42b7-bace-340ea3e2b105"
                         },
                         {
@@ -361,6 +373,10 @@
                         {
                             "type": "match",
                             "id": "b81c9274-cda8-427b-8fc1-4030e92e5f98"
+                        },
+                        {
+                            "type": "match",
+                            "id": "4bdba858-ef43-42c0-8746-daa4656a206b"
                         },
                         {
                             "type": "match",
@@ -430,13 +446,13 @@
                 }
             },
             "links": {
-                "self": "https://api.playbattlegrounds.com/shards/steam/players/account.9bfbd8de2a3b47b18e6d5934c291ba96",
+                "self": "https://api.playbattlegrounds.com/shards/steam/players/account.b63c8d83883a42c3893fc820e273c631",
                 "schema": ""
             }
         }
     ],
     "links": {
-        "self": "https://api.pubg.com/shards/steam/players?filter[playerNames]=stx0"
+        "self": "https://api.pubg.com/shards/steam/players?filter[playerNames]=kojx"
     },
     "meta": {}
 }
