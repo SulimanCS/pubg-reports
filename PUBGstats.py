@@ -102,16 +102,23 @@ def getMatchInfo(matchID):
         json.dump(r_dict, f, indent=4)
     
 
-def matchAnalysis():
+def matchAnalysis(player):
   
-    log = {'name': None, 'kills': None, 'knocks': None, 'assists': None}
+    log = {'name': None, 'kills': None, 'knocks': None, 'assists': None,
+           'headshots': None, 'revives': None, 'heals': None,
+           'boosts': None, 'walk-distance': None, 'kill-rank': None,
+           'weapons-acquired': None, 'time-survived': None, 
+           'damage-dealt': None, 'longest-kill': None, 'kill-streak': None,
+           'win-rank': None}
+           
     with open ('matchdata/test.json', 'r') as playerFile:
         playerData = json.load(playerFile)
-        for info in playerData:
-            print(info)
-        print(playerData['included'][0]['type'])
+
+        #for info in playerData:
+            #print(info)
+        #print(playerData['included'][0]['type'])
         # if participant, then check the name
-        print(playerData['included'][0]['attributes']['stats'])
+        #print(playerData['included'][0]['attributes']['stats'])
         
         #print(len(playerData['included']))
         print('---------------------')
@@ -120,40 +127,35 @@ def matchAnalysis():
             if report['type']== 'participant':
                 #print(True)
                 print(report['attributes']['stats']['name'])
-                if report['attributes']['stats']['name'] == 'stx0':
+                if report['attributes']['stats']['name'] == player: 
                     #print('kills: {}'.format(report['attributes']['stats']['kills']))
                     log['name'] = report['attributes']['stats']['name']
                     log['kills'] = report['attributes']['stats']['kills']
                     log['knocks'] = report['attributes']['stats']['DBNOs']
                     log['assists'] = report['attributes']['stats']['assists']
+                    log['headshots'] = report['attributes']['stats']['headshotKills']
+                    log['revives'] = report['attributes']['stats']['revives']
+                    log['heals'] = report['attributes']['stats']['heals']
+                    log['boosts'] = report['attributes']['stats']['boosts']
+                    log['walk-distance'] = report['attributes']['stats']['walkDistance']
+                    log['kill-rank'] = report['attributes']['stats']['killPlace']
+                    log['weapons-acquired'] = report['attributes']['stats']['weaponsAcquired']
+                    log['time-survived'] = report['attributes']['stats']['timeSurvived']
+                    log['damage-dealt'] = report['attributes']['stats']['damageDealt']
+                    log['longest-kill'] = report['attributes']['stats']['longestKill']
+                    log['kill-streak'] = report['attributes']['stats']['killStreaks']
+                    log['win-rank'] = report['attributes']['stats']['winPlace']
+                    
 
                     return log
             
-        '''
-        for info in playerData:
-            print(info)
-            #print(playerData['data'])
-            for types in playerData['data']:
-                print(types)
-                test = types
-        '''
-    '''
-    print('------------------------------')
-    print(test['relationships']['matches'])
-    matches = test['relationships']['matches']
-    print('------------------------------')
-    print(matches['data'][0]['id'])
-    '''
-
-
-
 
 def main():
 
-    #getPlayerInfo('stx0')
-    #matchID = getLatestMatch('stx0')
-    #getMatchInfo(matchID)
-    log = matchAnalysis()
+    getPlayerInfo('stx0')
+    matchID = getLatestMatch('stx0')
+    getMatchInfo(matchID)
+    log = matchAnalysis('stx0')
     print(log)
 
 
