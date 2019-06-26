@@ -2,15 +2,15 @@
     "data": [
         {
             "type": "player",
-            "id": "account.9bfbd8de2a3b47b18e6d5934c291ba96",
+            "id": "account.b63c8d83883a42c3893fc820e273c631",
             "attributes": {
-                "updatedAt": "2019-06-26T02:24:22Z",
-                "patchVersion": "",
-                "name": "stx0",
-                "stats": null,
                 "titleId": "bluehole-pubg",
                 "shardId": "steam",
-                "createdAt": "2019-06-26T02:24:22Z"
+                "createdAt": "2019-06-25T08:36:21Z",
+                "updatedAt": "2019-06-25T08:36:21Z",
+                "patchVersion": "",
+                "name": "kojx",
+                "stats": null
             },
             "relationships": {
                 "assets": {
@@ -18,46 +18,6 @@
                 },
                 "matches": {
                     "data": [
-                        {
-                            "type": "match",
-                            "id": "c67f9964-41d7-4ed2-8794-f3f5b00bc8be"
-                        },
-                        {
-                            "type": "match",
-                            "id": "8720adb2-7337-437d-8e78-1d6b5de0851f"
-                        },
-                        {
-                            "type": "match",
-                            "id": "6703d46e-f543-4a6b-a510-fe3246a18833"
-                        },
-                        {
-                            "type": "match",
-                            "id": "5ee69898-3701-4ffe-9e8b-d14cba41717b"
-                        },
-                        {
-                            "type": "match",
-                            "id": "7e2f5cc1-a087-4edf-9bc1-bf390da52532"
-                        },
-                        {
-                            "type": "match",
-                            "id": "f13770f4-8520-4d64-9e77-abc4507931fb"
-                        },
-                        {
-                            "type": "match",
-                            "id": "9dd086c7-5ab1-4dbd-a4eb-0ad9de7a3440"
-                        },
-                        {
-                            "type": "match",
-                            "id": "887d3b9e-937d-4a3d-8fc9-0a2f471f2e96"
-                        },
-                        {
-                            "type": "match",
-                            "id": "fa1d2979-2998-4d7a-9ac1-5c4230da0486"
-                        },
-                        {
-                            "type": "match",
-                            "id": "0abf7023-35e5-4050-8446-61b878aca026"
-                        },
                         {
                             "type": "match",
                             "id": "8199d282-4576-4d4e-9726-8a8dcfdb6c26"
@@ -240,6 +200,14 @@
                         },
                         {
                             "type": "match",
+                            "id": "30ab7892-0054-414d-9fe7-3bc8d79c2f49"
+                        },
+                        {
+                            "type": "match",
+                            "id": "00c6e3dc-87da-44f8-963c-570d1f04d9d9"
+                        },
+                        {
+                            "type": "match",
                             "id": "c9905f94-5c46-4f6f-a617-e687b106212a"
                         },
                         {
@@ -344,6 +312,10 @@
                         },
                         {
                             "type": "match",
+                            "id": "81898ed9-06b5-4c65-9cb0-10f3a00c3cf7"
+                        },
+                        {
+                            "type": "match",
                             "id": "7e321d6f-5d55-42b7-bace-340ea3e2b105"
                         },
                         {
@@ -401,6 +373,10 @@
                         {
                             "type": "match",
                             "id": "b81c9274-cda8-427b-8fc1-4030e92e5f98"
+                        },
+                        {
+                            "type": "match",
+                            "id": "4bdba858-ef43-42c0-8746-daa4656a206b"
                         },
                         {
                             "type": "match",
@@ -470,13 +446,13 @@
                 }
             },
             "links": {
-                "self": "https://api.playbattlegrounds.com/shards/steam/players/account.9bfbd8de2a3b47b18e6d5934c291ba96",
+                "self": "https://api.playbattlegrounds.com/shards/steam/players/account.b63c8d83883a42c3893fc820e273c631",
                 "schema": ""
             }
         }
     ],
     "links": {
-        "self": "https://api.pubg.com/shards/steam/players?filter[playerNames]=stx0"
+        "self": "https://api.pubg.com/shards/steam/players?filter[playerNames]=kojx"
     },
     "meta": {}
 }

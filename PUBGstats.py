@@ -2,6 +2,8 @@ import requests
 import json
 import csv
 from datetime import datetime
+import os
+import glob
 
 
 def getToken():
@@ -38,7 +40,7 @@ def getPlayerInfo(player):
     
     url = 'https://api.pubg.com/shards/steam/players?filter[playerNames]='
     url = url + player
-    print(url)
+    #print(url)
 
     r = requests.get(url, headers=header)
     if r.ok == False:
@@ -79,7 +81,7 @@ def getLatestMatch(player):
     '''
 
     final = playerData['data'][0]['relationships']['matches']['data'][0]['id']
-    print(final)
+    #print(final)
 
     return final
     
@@ -87,7 +89,7 @@ def getMatchInfo(matchID):
 
     url = 'https://api.pubg.com/shards/steam/matches/'
     url = url + matchID 
-    print(url)
+    #print(url)
 
     r = requests.get(url, headers=header)
     if r.ok == False:
@@ -101,7 +103,12 @@ def getMatchInfo(matchID):
     with open (filename, 'w') as f:
         json.dump(r_dict, f, indent=4)
     
+def getLastModfiedMatchFile():
 
+    files = glob.glob('/home/suliman/Documents/Projects/PUBGanalysis/matchdata/*.json')
+    #print(max(files, key=os.path.getctime))
+    return max(files, key=os.path.getctime)
+    
 def matchAnalysis(player):
   
     log = {'name': None, 'kills': None, 'knocks': None, 'assists': None,
@@ -110,8 +117,11 @@ def matchAnalysis(player):
            'weapons-acquired': None, 'time-survived': None, 
            'damage-dealt': None, 'longest-kill': None, 'kill-streak': None,
            'win-rank': None}
-           
-    with open ('matchdata/test.json', 'r') as playerFile:
+    
+    newestFile = getLastModfiedMatchFile()
+    #with open ('matchdata/test.json', 'r') as playerFile:
+    #print(newestFile)
+    with open (newestFile, 'r') as playerFile:
         playerData = json.load(playerFile)
 
         #for info in playerData:
@@ -121,12 +131,12 @@ def matchAnalysis(player):
         #print(playerData['included'][0]['attributes']['stats'])
         
         #print(len(playerData['included']))
-        print('---------------------')
+        #print('---------------------')
         for report in playerData['included']:
             #print(report['type'])
             if report['type']== 'participant':
                 #print(True)
-                print(report['attributes']['stats']['name'])
+                #print(report['attributes']['stats']['name'])
                 if report['attributes']['stats']['name'] == player: 
                     #print('kills: {}'.format(report['attributes']['stats']['kills']))
                     log['name'] = report['attributes']['stats']['name']
@@ -159,12 +169,13 @@ def matchAnalysis(player):
 #
 
 global matchID1, matchID2
-matchID1 = '1' 
+# TODO these two needs to be NONE 
+matchID1 = '1'
 matchID2 = None
 def testnewmatch():
 
     global matchID1, matchID2
-    print('matchID1,2: {} and {}'.format(matchID1, matchID2))
+    #print('matchID1,2: {} and {}'.format(matchID1, matchID2))
     
     #matchID = '8199d282-4576-4d4e-9726-8a8dcfdb6c' 
     #return checkNewMatch('stx0', matchID)
@@ -177,8 +188,8 @@ def testnewmatch():
     if matchID1 == None and matchID2 == None:
         matchID1 = getLatestMatch('stx0')
         matchID2 = getLatestMatch('kojx')
-        print('YES')
-        return
+        print('return type 1 (init return, should be only once)')
+        return False
 
     currentMatchID1 = getLatestMatch('stx0')
     currentMatchID2 = getLatestMatch('kojx')
@@ -187,8 +198,8 @@ def testnewmatch():
     # one then the players did not play a new match
     # therefore, return/exit
     if currentMatchID1 == matchID1 and currentMatchID2 == matchID2:
-        print('YES2')
-        return
+        print('return type 2')
+        return False
     
     # if the routine survived the returns
     # then it means that the players entered
@@ -201,10 +212,12 @@ def testnewmatch():
     # since players entered a new match
     # record their game stats and set 
     # the ID of the match
+    getMatchInfo(currentMatchID1)
     logP1 = matchAnalysis('stx0')
     logP2 = matchAnalysis('kojx')
     matchID1 = currentMatchID1
     matchID2 = currentMatchID2
+    getLastModfiedMatchFile()
     return logP1, logP2
 
 
@@ -229,8 +242,12 @@ def main():
 
     result = testnewmatch()
     print('result is: {}'.format(result))
+    print('\n\n=================================\n\n')
     result = testnewmatch()
     print('result is: {}'.format(result))
+
+    #--------------------------
+    getLastModfiedMatchFile()
 
 
 
@@ -242,3 +259,5 @@ if __name__ == '__main__':
 
     init()
     main()
+else:
+    init()
