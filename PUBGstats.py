@@ -105,7 +105,11 @@ def getMatchInfo(matchID):
     
 def getLastModfiedMatchFile():
 
-    files = glob.glob('/home/suliman/Documents/Projects/PUBGanalysis/matchdata/*.json')
+    #filepath = '/home/suliman/Documents/Projects/PUBGanalysis/matchdata/*.json'
+    filepath = os.getcwd()
+    filepath = filepath + '/matchdata/*.json'
+    files = glob.glob(filepath)
+    #print(filepath)
     #print(max(files, key=os.path.getctime))
     return max(files, key=os.path.getctime)
     
@@ -240,11 +244,11 @@ def main():
 
     #--------------------------
 
-    result = testnewmatch()
-    print('result is: {}'.format(result))
-    print('\n\n=================================\n\n')
-    result = testnewmatch()
-    print('result is: {}'.format(result))
+    #result = testnewmatch()
+    #print('result is: {}'.format(result))
+    #print('\n\n=================================\n\n')
+    #result = testnewmatch()
+    #print('result is: {}'.format(result))
 
     #--------------------------
     getLastModfiedMatchFile()
