@@ -225,6 +225,37 @@ def testnewmatch():
     #print('returned P1: {}, P2: {}.'.format(logP1,logP2))
     return logP1, logP2
 
+def getTopThreeKillRank():
+
+    try:
+        newestFile = getLastModfiedMatchFile()
+    except ValueError as error:
+        print('no recent game file has been found, error: ', error)
+        return False
+    killLog = {}
+    with open (newestFile, 'r') as playerFile:
+        playerData = json.load(playerFile)
+        for report in playerData['included']:
+            if report['type'] == 'participant':
+                newAddition = {report['attributes']['stats']['name']:report['attributes']['stats']['kills']}
+                killLog.update(newAddition)
+
+    #print(counter)
+    #print(len(killLog.keys()))
+    #print(killLog)
+    topKillPlayers = sorted(killLog, key=killLog.get, reverse=True)
+    topKillLog = {}
+    for rank in range (3):
+        #print(topKillPlayers[rank])
+        #print(killLog[topKillPlayers[rank]])
+        newAddition = {topKillPlayers[rank]:killLog[topKillPlayers[rank]]}
+        topKillLog.update(newAddition)
+    
+    #print(topKillLog)
+    return topKillLog
+            
+
+    
 
     
 
@@ -252,7 +283,9 @@ def main():
     #print('result is: {}'.format(result))
 
     #--------------------------
-    getLastModfiedMatchFile()
+    #getLastModfiedMatchFile()
+    #getMatchInfo(getLatestMatch('stx0'))
+    getTopThreeKillRank()
 
 
 
