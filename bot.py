@@ -46,13 +46,13 @@ async def on_message(message):
 
 async def test():
    
-    result = PUBGstats.testnewmatch()
-    if result == False:
-        return
-    P1, P2 = result
+    #result = PUBGstats.testnewmatch()
+    #if result == False:
+    #    return
+    #P1, P2 = result
     #print (P1)
     #print (P2)
-    embed = makeEmbed(P1, P2)
+    #embed = makeEmbed(P1, P2)
     #return
     ''' old embed
     #TODO fix the timestamp
@@ -70,16 +70,28 @@ async def test():
     #embed.add_field(name="**P2**", value="**kills:\t\t x**\n**assists:   x**\n**knocks:   x**", inline=True)
     '''
 
+    # TODO change the channel to the new channel later
     while True:
         #print('hi')
         channel = client.get_channel(591227619928702979)
+        if channel == None:
+            await asyncio.sleep(5)
+            continue
         #print(channel)
-        if channel != None:
+        result = PUBGstats.testnewmatch()
+        if result != False:
+            P1, P2 = result
+            # TODO This works ONLY for duo, logic needs replacing if this tool is going to cover the other modes
+            if P1 != None and P2 != None:
+                embed = makeEmbed(P1, P2)
+            else:
+                result = False
+        if channel != None and result != False:
             await channel.send('After Action Report Is Ready For Deployment! [BETA/TESTING]')
             await channel.send(embed=embed)
         # wait for x amount of seconds to allow other tasks to be done,
         # then comeback and continue to do work with PUBG api
-        await asyncio.sleep(5)
+        await asyncio.sleep(60)
 
 def makeEmbed(P1, P2):
 

@@ -174,7 +174,7 @@ def matchAnalysis(player):
 
 global matchID1, matchID2
 # TODO these two needs to be NONE 
-matchID1 = '1'
+matchID1 = None
 matchID2 = None
 def testnewmatch():
 
@@ -222,6 +222,7 @@ def testnewmatch():
     matchID1 = currentMatchID1
     matchID2 = currentMatchID2
     getLastModfiedMatchFile()
+    #print('returned P1: {}, P2: {}.'.format(logP1,logP2))
     return logP1, logP2
 
 
