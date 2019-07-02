@@ -90,8 +90,8 @@ def makeEmbed(P1, P2):
         raise Exception('The ranks of P1 and P2 does not match [duo], aborting...')
 
 
-    #TODO fix the timestamp
-    date = datetime.datetime.now()
+    #TODO fix the timestamp. Update: test the new modification
+    date = datetime.datetime.utcnow()#+datetime.timedelta(hours=0)
     #embed = discord.Embed(colour=discord.Colour(0xD0650A), description="Duo game with player1 and player2", timestamp=date)
     embed = discord.Embed(colour=discord.Colour(0xF8B547), description="Duo game with {} and {}".format(P1['name'], P2['name']), timestamp=date)
     embed.set_thumbnail(url="https://seeklogo.com/images/W/winner-winner-chicken-dinner-pubg-logo-A8CF2AD8D2-seeklogo.com.png")
