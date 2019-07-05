@@ -4,13 +4,13 @@
             "type": "player",
             "id": "account.9bfbd8de2a3b47b18e6d5934c291ba96",
             "attributes": {
-                "shardId": "steam",
-                "createdAt": "2019-07-01T11:47:56Z",
-                "updatedAt": "2019-07-01T11:47:56Z",
-                "patchVersion": "",
-                "name": "stx0",
                 "stats": null,
-                "titleId": "bluehole-pubg"
+                "titleId": "bluehole-pubg",
+                "shardId": "steam",
+                "createdAt": "2019-07-02T04:47:06Z",
+                "updatedAt": "2019-07-02T04:47:06Z",
+                "patchVersion": "",
+                "name": "stx0"
             },
             "relationships": {
                 "assets": {
@@ -617,50 +617,6 @@
                         {
                             "type": "match",
                             "id": "107df982-3671-4e7a-89d5-b4af23a47ce0"
-                        },
-                        {
-                            "type": "match",
-                            "id": "efca8bcf-21df-4a8f-bc39-9b2fce0d4c67"
-                        },
-                        {
-                            "type": "match",
-                            "id": "923cbbcf-5f73-4643-8be3-c631a8b57475"
-                        },
-                        {
-                            "type": "match",
-                            "id": "90ea4e49-08f4-477f-a334-3a0abb55127a"
-                        },
-                        {
-                            "type": "match",
-                            "id": "b4bdb1a8-0f22-44d8-912b-280412370de3"
-                        },
-                        {
-                            "type": "match",
-                            "id": "1c9913e3-27d1-444c-bd7c-ef88de142d3a"
-                        },
-                        {
-                            "type": "match",
-                            "id": "a5a5a15f-5d49-46ef-a800-1ff30517dc91"
-                        },
-                        {
-                            "type": "match",
-                            "id": "173676b7-dd14-4c17-965f-7566ae5d25b4"
-                        },
-                        {
-                            "type": "match",
-                            "id": "d1b7f121-eb4e-4f65-95d6-5549d3b2ba9f"
-                        },
-                        {
-                            "type": "match",
-                            "id": "adeb6339-2c87-462f-bbde-103c7c80e914"
-                        },
-                        {
-                            "type": "match",
-                            "id": "440d8afb-d471-40a0-9b4e-c866b9c38fd2"
-                        },
-                        {
-                            "type": "match",
-                            "id": "ff17405a-7c69-44e4-a25c-0a4b6738fb4e"
                         }
                     ]
                 }
