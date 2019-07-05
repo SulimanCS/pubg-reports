@@ -232,32 +232,24 @@ def getTopThreeKillRank():
     except ValueError as error:
         print('no recent game file has been found, error: ', error)
         return False
-    killLog = {}
+    killLog = []
+    P1, P2, P3 = None, None, None
     with open (newestFile, 'r') as playerFile:
         playerData = json.load(playerFile)
         for report in playerData['included']:
             if report['type'] == 'participant':
-                newAddition = {report['attributes']['stats']['name']:report['attributes']['stats']['kills']}
-                killLog.update(newAddition)
+                if report['attributes']['stats']['killPlace'] == 1:
+                    P1 = (report['attributes']['stats']['name'], report['attributes']['stats']['kills'])
+                if report['attributes']['stats']['killPlace'] == 2:
+                    P2 = (report['attributes']['stats']['name'], report['attributes']['stats']['kills'])
+                if report['attributes']['stats']['killPlace'] == 3:
+                    P3 = (report['attributes']['stats']['name'], report['attributes']['stats']['kills'])
 
-    #print(counter)
-    #print(len(killLog.keys()))
-    #print(killLog)
-    topKillPlayers = sorted(killLog, key=killLog.get, reverse=True)
-    topKillLog = {}
-    for rank in range (3):
-        #print(topKillPlayers[rank])
-        #print(killLog[topKillPlayers[rank]])
-        newAddition = {topKillPlayers[rank]:killLog[topKillPlayers[rank]]}
-        topKillLog.update(newAddition)
-    
-    #print(topKillLog)
-    return topKillLog
-            
+    killLog.append(P1)
+    killLog.append(P2)
+    killLog.append(P3)
 
-    
-
-    
+    return killLog
 
 def main():
 

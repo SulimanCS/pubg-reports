@@ -33,10 +33,8 @@ async def on_message(message):
     elif message.content.startswith('who is the best player in the world?'):
         await message.channel.send('Lionel Messi')
     elif message.content.startswith('!top3'):
-        # TODO optimize this mess!
         top3 = PUBGstats.getTopThreeKillRank()
-        string = '#1: {} with {} kills\n #2: {} with {} kills\n #3: {} with {} kills'.format(list(top3)[0], 
-        list(top3.values())[0], list(top3)[1], list(top3.values())[1],list(top3)[2], list(top3.values())[2])
+        string = '#1: {} with {} kills\n #2: {} with {} kills\n #3: {} with {} kills'.format(top3[0][0], top3[0][1], top3[1][0], top3[1][1], top3[2][0], top3[2][1])
         await message.channel.send(string)
     elif message.content.startswith('bye'):
         await message.channel.send('logging out!')
