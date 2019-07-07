@@ -48,9 +48,9 @@ async def on_message(message):
     await channel.send('test')
     '''
 
-async def test():
+async def reportDuo():
    
-    #result = PUBGstats.testnewmatch()
+    #result = PUBGstats.fetchDuoGame()
     #if result == False:
     #    return
     #P1, P2 = result
@@ -83,7 +83,7 @@ async def test():
             await asyncio.sleep(5)
             continue
         #print(channel)
-        result = PUBGstats.testnewmatch()
+        result = PUBGstats.fetchDuoGame()
         if result != False:
             P1, P2 = result
             # TODO This works ONLY for duo, logic needs replacing if this tool is going to cover the other modes
@@ -148,7 +148,7 @@ def formatLog(log):
 
 
 
-client.loop.create_task(test())
+client.loop.create_task(reportDuo())
 client.run(TOKEN)
 
 

@@ -174,9 +174,9 @@ def matchAnalysis(player):
 
 global matchID1, matchID2
 # TODO these two needs to be NONE 
-matchID1 = None
+matchID1 = '1'
 matchID2 = None
-def testnewmatch():
+def fetchDuoGame():
 
     global matchID1, matchID2
     #print('matchID1,2: {} and {}'.format(matchID1, matchID2))
@@ -268,10 +268,10 @@ def main():
 
     #--------------------------
 
-    #result = testnewmatch()
+    #result = fetchDuoGame()
     #print('result is: {}'.format(result))
     #print('\n\n=================================\n\n')
-    #result = testnewmatch()
+    #result = fetchDuoGame()
     #print('result is: {}'.format(result))
 
     #--------------------------
