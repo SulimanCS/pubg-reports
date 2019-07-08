@@ -5,9 +5,9 @@ import datetime
 import PUBGstats
 
 global ignoreFirst
-global playingMembers
+global playingMembers, gamesIDs
 ignoreFirst = False
-playingMembers = {}
+playingMembers, gamesIDs = {}, set()
 
 TOKEN = None
 with open ('TOKENS.csv', 'r') as TOKENS:
@@ -26,12 +26,9 @@ client = discord.Client()
 
 @client.event
 async def on_ready():
-    print('We have logged in as {0.user}'.format(client))
-    print('------------------------')
     getPlayingMembers(client.get_all_members())
-    print('------------------------')
-    getPlayingMembers(client.get_all_members())
-    print('------------------------')
+    print('current members: {}'.format(playingMembers))
+    print('current game IDs: {}'.format(gamesIDs))
 
 
 @client.event
@@ -129,19 +126,24 @@ def formatLog(log):
     return log
 
 def getPlayingMembers(members):
+    
 
-    global playingMembers
-    print(bool(playingMembers))
+    global playingMembers, gamesIDs 
+    #print(bool(playingMembers))
     for member in members:
-        if member.bot == True or member.name in playingMembers:
+        # TODO if the player stopped playing, remove him from dict
+        if member.bot == True or len(member.activities) == 0 or member.name in playingMembers:
+            print('continue hit')
             continue
-        print(member)
+        #print(member)
         gameName = getPUBGName(member.name)
-        print(gameName)
-        playingMembers[member.name] = PUBGstats.getLatestMatch(gameName)
+        matchID = PUBGstats.getLatestMatch(gameName)
+        #print(gameName)
+        playingMembers[member.name] = matchID
+        gamesIDs.add(matchID)
  
     #print(bool(playingMembers))
-    print(playingMembers)
+    #print(playingMembers)
 
 def getPUBGName(name):
     
