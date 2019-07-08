@@ -4,6 +4,11 @@ import asyncio
 import datetime
 import PUBGstats
 
+global ignoreFirst
+global playingMembers
+ignoreFirst = False
+playingMembers = {}
+
 TOKEN = None
 with open ('TOKENS.csv', 'r') as TOKENS:
     TOKENSreader = csv.reader(TOKENS)
@@ -22,6 +27,12 @@ client = discord.Client()
 @client.event
 async def on_ready():
     print('We have logged in as {0.user}'.format(client))
+    print('------------------------')
+    getPlayingMembers(client.get_all_members())
+    print('------------------------')
+    getPlayingMembers(client.get_all_members())
+    print('------------------------')
+
 
 @client.event
 async def on_message(message):
@@ -49,40 +60,14 @@ async def on_message(message):
     '''
 
 async def reportDuo():
-   
-    #result = PUBGstats.fetchDuoGame()
-    #if result == False:
-    #    return
-    #P1, P2 = result
-    #print (P1)
-    #print (P2)
-    #embed = makeEmbed(P1, P2)
-    #return
-    ''' old embed
-    #TODO fix the timestamp
-    date = datetime.datetime.now()
-    #embed = discord.Embed(colour=discord.Colour(0xD0650A), description="Duo game with player1 and player2", timestamp=date)
-    embed = discord.Embed(colour=discord.Colour(0xF8B547), description="Duo game with player1 and player2", timestamp=date)
-    embed.set_thumbnail(url="https://seeklogo.com/images/W/winner-winner-chicken-dinner-pubg-logo-A8CF2AD8D2-seeklogo.com.png")
-    embed.set_author(name="Post Round Report")
-    embed.set_footer(text="This tool is developed by Suli", icon_url="https://cdn.discordapp.com/embed/avatars/0.png")
 
-    #embed.add_field(name="​", value="​")
-    embed.add_field(value="**Team rank: x**", name="\u200B", inline = False)
-    embed.add_field(name="**P1**", value="**kills:\t\t x**\n**headshots: x**\n**assists:   x**\n**knocks:   x**\n**revives:  x**\n**heals:     x**\n**boosts:   x**\n**walk distance:  x\nkill rank:   x**\n**weapons acquired:   x**", inline=True)
-    embed.add_field(name="**P2**", value="**kills:\t\t x**\n**headshots: x**\n**assists:   x**\n**knocks:   x**\n**revives:  x**\n**heals:     x**\n**boosts:   x**\n**walk distance:  x\nkill rank:   x**\n**weapons acquired:   x**", inline=True)
-    #embed.add_field(name="**P2**", value="**kills:\t\t x**\n**assists:   x**\n**knocks:   x**", inline=True)
-    '''
-
-    # TODO change the channel to the new channel later
     while True:
-        #print('hi')
-        #channel = client.get_channel(595458801960747008)
+        # TODO make this a global variable AFTER connecting to server
         channel = client.get_channel(595459764348125194)
         if channel == None:
             await asyncio.sleep(5)
             continue
-        #print(channel)
+        print(channel)
         result = PUBGstats.fetchDuoGame()
         if result != False:
             P1, P2 = result
@@ -143,12 +128,29 @@ def formatLog(log):
     log['longest-kill'] = round(log['longest-kill'], 2)
     return log
 
+def getPlayingMembers(members):
+
+    global playingMembers
+    print(bool(playingMembers))
+    for member in members:
+        if member.bot == True or member.name in playingMembers:
+            continue
+        print(member)
+        gameName = getPUBGName(member.name)
+        print(gameName)
+        playingMembers[member.name] = PUBGstats.getLatestMatch(gameName)
+ 
+    #print(bool(playingMembers))
+    print(playingMembers)
+
+def getPUBGName(name):
     
-        
+    if name == 'suli':
+        return 'stx0'
+    elif name == 'jok':
+        return 'kojx'
 
-
-
-client.loop.create_task(reportDuo())
+#client.loop.create_task(reportDuo())
 client.run(TOKEN)
 
 
