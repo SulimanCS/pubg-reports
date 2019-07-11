@@ -26,9 +26,7 @@ client = discord.Client()
 
 @client.event
 async def on_ready():
-    getPlayingMembers(client.get_all_members())
-    print('current members: {}'.format(playingMembers))
-    print('current game IDs: {}'.format(gamesIDs))
+    print('We have logged in as {0.user}'.format(client))
 
 
 @client.event
@@ -38,6 +36,12 @@ async def on_message(message):
         return
     if message.content.startswith('$hello'):
         await message.channel.send('Hello!')
+    elif message.content.startswith('check'):
+        print('-------------------')
+        getPlayingMembers(client.get_all_members())
+        print('current members: {}'.format(playingMembers))
+        print('current game IDs: {}'.format(gamesIDs))
+        print('-------------------')
     elif message.content.startswith('who is the best player in the world?'):
         await message.channel.send('Lionel Messi')
     elif message.content.startswith('!top3'):
@@ -131,20 +135,53 @@ def getPlayingMembers(members):
     global playingMembers, gamesIDs 
     #print(bool(playingMembers))
     for member in members:
+        print(member.name)
+        #print(member.status)
+        #print(type(str(member.status)))
         # TODO if the player stopped playing, remove him from dict
-        if member.bot == True or len(member.activities) == 0 or member.name in playingMembers:
+        if member.name in playingMembers:
+            if len(member.activities) == 0:
+                del playingMembers[member.name]
+            else:
+                print('check if in PUBG or not')
+                for activity in member.activities:
+                    print(activity.name)
+                    print(type(activity))
+                    isPlaying = False
+                    if activity.name == "PLAYERUNKNOWN'S BATTLEGROUNDS":
+                        isPlaying = True 
+                        break 
+                #print('after for loop') 
+                if isPlaying == False:
+                    del playingMembers[member.name]
+
+            continue 
+
+        if member.bot == True or str(member.status) == 'offline' or len(member.activities) == 0:
             print('continue hit')
             continue
         #print(member)
+
+        for activity in member.activities:
+            if activity.name == "PLAYERUNKNOWN'S BATTLEGROUNDS":
+                gameName = getPUBGName(member.name)
+                matchID = PUBGstats.getLatestMatch(gameName)
+                #print(gameName)
+                playingMembers[member.name] = matchID
+                gamesIDs.add(matchID)
+                break 
+        '''
         gameName = getPUBGName(member.name)
         matchID = PUBGstats.getLatestMatch(gameName)
         #print(gameName)
         playingMembers[member.name] = matchID
         gamesIDs.add(matchID)
+        '''
  
     #print(bool(playingMembers))
     #print(playingMembers)
 
+# TODO make this a csv file that can be altered from the discord server
 def getPUBGName(name):
     
     if name == 'suli':
