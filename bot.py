@@ -41,6 +41,9 @@ async def on_message(message):
         print('current members: {}'.format(playingMembers))
         print('current game IDs: {}'.format(gamesIDs))
         print('-------------------')
+        trackPUBGRounds()
+        print('-------------------')
+
     elif message.content.startswith('who is the best player in the world?'):
         await message.channel.send('Lionel Messi')
     elif message.content.startswith('!top3'):
@@ -138,6 +141,9 @@ def getPlayingMembers(members):
         #print(member.status)
         #print(type(str(member.status)))
 
+        #TODO make gameName here
+        # and if return is None then exit
+
         if member.name in playingMembers:
             if len(member.activities) == 0:
                 del playingMembers[member.name]
@@ -181,6 +187,7 @@ def getPlayingMembers(members):
         gamesIDs.add(matchID)
         '''
  
+    
     #print(bool(playingMembers))
     #print(playingMembers)
 
@@ -191,6 +198,41 @@ def getPUBGName(name):
         return 'stx0'
     elif name == 'jok':
         return 'kojx'
+    else:
+        return None
+
+def trackPUBGRounds():
+
+    getPlayingMembers(client.get_all_members())
+
+    print('before: {}'.format(playingMembers))
+    for player in playingMembers.keys():
+        gameName = getPUBGName(player)
+        if gameName == None:
+            print('continue hit 2')
+            continue
+        currentMatchID = PUBGstats.getLatestMatchID(gameName)
+        # if player hasn't played a new game 
+        # then do nothing
+        # TODO add an OR statment to check if gameid
+        # has already been reported
+        if playingMembers[player] == currentMatchID:
+            continue
+
+        # TODO make this the last thing to be made
+        gamesIDs.add(playingMembers[player])
+        playingMembers[player] = currentMatchID
+
+        roundType = PUBGstats.getRoundType(gameName)
+        print(roundType)
+        # TODO cover tpp as well
+        if roundType == 'solo-fpp':
+            print('temp')
+             
+
+    print('after: {}'.format(playingMembers))
+
+
 
 #client.loop.create_task(reportDuo())
 client.run(TOKEN)
