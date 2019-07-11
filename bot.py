@@ -41,7 +41,7 @@ async def on_message(message):
         print('current members: {}'.format(playingMembers))
         print('current game IDs: {}'.format(gamesIDs))
         print('-------------------')
-        trackPUBGRounds()
+        await trackPUBGRounds()
         print('-------------------')
 
     elif message.content.startswith('who is the best player in the world?'):
@@ -201,9 +201,15 @@ def getPUBGName(name):
     else:
         return None
 
-def trackPUBGRounds():
+async def trackPUBGRounds():
+
+    channel = client.get_channel(595459764348125194)
+    if channel == None:
+        await asyncio.sleep(5)
+        channel = client.get_channel(595459764348125194)
 
     getPlayingMembers(client.get_all_members())
+
 
     print('before: {}'.format(playingMembers))
     for player in playingMembers.keys():
@@ -225,10 +231,26 @@ def trackPUBGRounds():
 
         roundType = PUBGstats.getRoundType(gameName)
         print(roundType)
+
         # TODO cover tpp as well
         if roundType == 'solo-fpp':
             print('temp')
-             
+            P1 = PUBGstats.matchAnalysis(gameName)
+            embed = makeEmbedSolo(P1)
+            await channel.send('After Action Report Is Ready For Deployment! [BETA/TESTING][v0.2.5]')
+            await channel.send(embed=embed)
+            continue
+        elif roundType == 'duo-fpp':
+            print('temp')
+        elif roundType == 'squad-fpp':
+            print('temp')
+        else:
+            # if the game isn't solo, duo or squad (ex: war mode)
+            # then don't report and move on to the next playing player
+            continue
+
+
+
 
     print('after: {}'.format(playingMembers))
 
@@ -256,6 +278,7 @@ def makeEmbedSolo(P1):
     
 
 #client.loop.create_task(reportDuo())
+client.loop.create_task(trackPUBGRounds())
 client.run(TOKEN)
 
 
