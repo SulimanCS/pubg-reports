@@ -121,7 +121,8 @@ def matchAnalysis(player):
            'weapons-acquired': None, 'time-survived': None, 
            'damage-dealt': None, 'longest-kill': None, 'kill-streak': None,
            'win-rank': None}
-    
+   
+    # TODO this needs to change!
     newestFile = getLastModfiedMatchFile()
     #with open ('matchdata/test.json', 'r') as playerFile:
     #print(newestFile)
@@ -251,6 +252,21 @@ def getTopThreeKillRank():
 
     return killLog
 
+def getRoundType(player):
+
+    getPlayerInfo(player)
+    matchID = getLatestMatchID(player)
+    getMatchInfo(matchID)
+    newestFile = getLastModfiedMatchFile()
+
+    with open (newestFile, 'r') as playerFile:
+        playerData = json.load(playerFile)
+        gameMode = playerData['data']['attributes']['gameMode']
+    return gameMode
+
+
+
+
 def main():
 
     #getPlayerInfo('stx0')
@@ -277,7 +293,8 @@ def main():
     #--------------------------
     #getLastModfiedMatchFile()
     #getMatchInfo(getLatestMatchID('stx0'))
-    getTopThreeKillRank()
+    #getTopThreeKillRank()
+    getRoundType('stx0')
 
 
 
