@@ -4,10 +4,9 @@ import asyncio
 import datetime
 import PUBGstats
 
-global ignoreFirst
-global playingMembers, gamesIDs
-ignoreFirst = False
+global playingMembers, gamesIDs, PUBG 
 playingMembers, gamesIDs = {}, set()
+PUBG = "PLAYERUNKNOWN'S BATTLEGROUNDS"
 
 TOKEN = None
 with open ('TOKENS.csv', 'r') as TOKENS:
@@ -138,7 +137,7 @@ def getPlayingMembers(members):
         print(member.name)
         #print(member.status)
         #print(type(str(member.status)))
-        # TODO if the player stopped playing, remove him from dict
+
         if member.name in playingMembers:
             if len(member.activities) == 0:
                 del playingMembers[member.name]
@@ -148,7 +147,7 @@ def getPlayingMembers(members):
                     print(activity.name)
                     print(type(activity))
                     isPlaying = False
-                    if activity.name == "PLAYERUNKNOWN'S BATTLEGROUNDS":
+                    if activity.name == PUBGs:
                         isPlaying = True 
                         break 
                 #print('after for loop') 
@@ -162,17 +161,21 @@ def getPlayingMembers(members):
             continue
         #print(member)
 
+        # If the program logic reached this stage
+        # then it means that a new player has been
+        # found
+
         for activity in member.activities:
-            if activity.name == "PLAYERUNKNOWN'S BATTLEGROUNDS":
+            if activity.name == PUBG:
                 gameName = getPUBGName(member.name)
-                matchID = PUBGstats.getLatestMatch(gameName)
+                matchID = PUBGstats.getLatestMatchID(gameName)
                 #print(gameName)
                 playingMembers[member.name] = matchID
                 gamesIDs.add(matchID)
                 break 
         '''
         gameName = getPUBGName(member.name)
-        matchID = PUBGstats.getLatestMatch(gameName)
+        matchID = PUBGstats.getLatestMatchID(gameName)
         #print(gameName)
         playingMembers[member.name] = matchID
         gamesIDs.add(matchID)

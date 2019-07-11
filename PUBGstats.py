@@ -58,7 +58,7 @@ def getPlayerInfo(player):
         json.dump(r_dict, f, indent=4)
 
 
-def getLatestMatch(player):
+def getLatestMatchID(player):
     
     filename = player + '.json'
     filename = 'playerdata/' + filename
@@ -165,7 +165,7 @@ def matchAnalysis(player):
             
 #def checkNewMatch(player, currentMatchID):
 #
-#    matchID = getLatestMatch(player)
+#    matchID = getLatestMatchID(player)
 #    if matchID == currentMatchID:
 #        return False
 #    else:
@@ -190,13 +190,13 @@ def fetchDuoGame():
     # once it gets updated, we know that the players
     # entered a new game
     if matchID1 == None and matchID2 == None:
-        matchID1 = getLatestMatch('stx0')
-        matchID2 = getLatestMatch('kojx')
+        matchID1 = getLatestMatchID('stx0')
+        matchID2 = getLatestMatchID('kojx')
         print('return type 1 (init return, should be only once)')
         return False
 
-    currentMatchID1 = getLatestMatch('stx0')
-    currentMatchID2 = getLatestMatch('kojx')
+    currentMatchID1 = getLatestMatchID('stx0')
+    currentMatchID2 = getLatestMatchID('kojx')
     
     # if current match ID matches with the previous
     # one then the players did not play a new match
@@ -255,13 +255,13 @@ def main():
 
     #getPlayerInfo('stx0')
     #getPlayerInfo('kojx')
-    #matchID1 = getLatestMatch('stx0')
-    #matchID2 = getLatestMatch('kojx')
+    #matchID1 = getLatestMatchID('stx0')
+    #matchID2 = getLatestMatchID('kojx')
 
     #--------------------------
 
     #getPlayerInfo('stx0')
-    #matchID = getLatestMatch('stx0')
+    #matchID = getLatestMatchID('stx0')
     #getMatchInfo(matchID)
     #log = matchAnalysis('stx0')
     #print(log)
@@ -276,7 +276,7 @@ def main():
 
     #--------------------------
     #getLastModfiedMatchFile()
-    #getMatchInfo(getLatestMatch('stx0'))
+    #getMatchInfo(getLatestMatchID('stx0'))
     getTopThreeKillRank()
 
 
