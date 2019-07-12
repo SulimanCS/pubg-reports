@@ -97,7 +97,8 @@ def getMatchInfo(matchID):
 
     r_dict = r.json()
 
-    filename = datetime.now().isoformat(timespec='minutes') + '.json'
+    #filename = datetime.now().isoformat(timespec='minutes') + '.json'
+    filename = matchID + '.json'
     filename = 'matchdata/' + filename
     #with open ('playerdata/data.json', 'w') as f:
     with open (filename, 'w') as f:
