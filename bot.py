@@ -53,6 +53,7 @@ async def on_message(message):
     elif message.content.startswith('who is the best player in the world?'):
         await message.channel.send('Lionel Messi')
     elif message.content.startswith('!top3'):
+        # TODO make TOP3 depends on who requested it
         top3 = PUBGstats.getTopThreeKillRank()
         string = '#1: {} with {} kills\n #2: {} with {} kills\n #3: {} with {} kills'.format(top3[0][0], top3[0][1], top3[1][0], top3[1][1], top3[2][0], top3[2][1])
         await message.channel.send(string)
@@ -180,7 +181,7 @@ def getPlayingMembers(members):
         for activity in member.activities:
             if activity.name == PUBG:
                 gameName = getPUBGName(member.name)
-                PUBGStats.getPlayerInfo(gameName)
+                PUBGstats.getPlayerInfo(gameName)
                 matchID = PUBGstats.getLatestMatchID(gameName)
                 #print(gameName)
                 playingMembers[member.name] = matchID
@@ -215,62 +216,67 @@ async def trackPUBGRounds():
         await asyncio.sleep(5)
         channel = client.get_channel(595459764348125194)
 
-    getPlayingMembers(client.get_all_members())
+    while True:
+        getPlayingMembers(client.get_all_members())
+        print('===========================================')
+        print('before: {}'.format(playingMembers))
+        for player in playingMembers.keys():
+            print('member: {}'.format(player))
+            gameName = getPUBGName(player)
 
+            if gameName == None:
+                print('continue hit 2')
+                continue
+           
+            PUBGstats.getPlayerInfo(gameName)
+            currentMatchID = PUBGstats.getLatestMatchID(gameName)
 
-    print('before: {}'.format(playingMembers))
-    for player in playingMembers.keys():
-        gameName = getPUBGName(player)
+            # if player hasn't played a new game 
+            # then do nothing OR if the game already
+            # has been reported (only happens in duo & squad)
+            if playingMembers[player] == currentMatchID or currentMatchID in gamesIDs:
+                if currentMatchID in gamesIDs:
+                    playingMembers[player] = currentMatchID
+                    print('continue hit 3')
+                else:
+                    print('continue hit 4')
+                continue
+            
+            # TODO make this the last thing to be made
+            gamesIDs.add(currentMatchID)
+            playingMembers[player] = currentMatchID
+            print('current match ID: {}'.format(currentMatchID))
 
-        if gameName == None:
-            print('continue hit 2')
-            continue
-       
-        PUBGstats.getPlayerInfo(gameName)
-        currentMatchID = PUBGstats.getLatestMatchID(gameName)
+            roundType = PUBGstats.getRoundType(gameName)
+            print(roundType)
 
-        # if player hasn't played a new game 
-        # then do nothing OR if the game already
-        # has been reported (only happens in duo & squad)
-        if playingMembers[player] == currentMatchID or currentMatchID in gamesIDs:
-            continue
-        
-        # TODO make this the last thing to be made
-        gamesIDs.add(currentMatchID)
-        playingMembers[player] = currentMatchID
-        print('current match ID: {}'.format(currentMatchID))
+            # TODO cover tpp as well
+            if roundType == 'solo-fpp':
+                print('temp')
+                P1 = PUBGstats.matchAnalysis(gameName)
+                embed = makeEmbedSolo(P1)
+                await channel.send('After Action Report Is Ready For Deployment! [BETA/TESTING][v0.2.5]')
+                await channel.send(embed=embed)
+                #continue
+            elif roundType == 'duo-fpp':
+                print('temp duo')
+                P1 = PUBGstats.matchAnalysis(gameName)
+                P2name = PUBGstats.getTeamMembersNames(P1['name'], P1['win-rank'], 'duo')
+                P2 = PUBGstats.matchAnalysis(P2name)
+                embed = makeEmbedDuo(P1, P2)
+                await channel.send('After Action Report Is Ready For Deployment! [BETA/TESTING][v0.2.5]')
+                await channel.send(embed=embed)
 
-        roundType = PUBGstats.getRoundType(gameName)
-        print(roundType)
+            elif roundType == 'squad-fpp':
+                print('temp squad')
+            else:
+                # if the game isn't solo, duo or squad (ex: war mode)
+                # then don't report and move on to the next playing player
+                continue
 
-        # TODO cover tpp as well
-        if roundType == 'solo-fpp':
-            print('temp')
-            P1 = PUBGstats.matchAnalysis(gameName)
-            embed = makeEmbedSolo(P1)
-            await channel.send('After Action Report Is Ready For Deployment! [BETA/TESTING][v0.2.5]')
-            await channel.send(embed=embed)
-            #continue
-        elif roundType == 'duo-fpp':
-            print('temp duo')
-            P1 = PUBGstats.matchAnalysis(gameName)
-            P2name = PUBGstats.getTeamMembersNames(P1['name'], P1['win-rank'], 'duo')
-            P2 = PUBGstats.matchAnalysis(P2name)
-            embed = makeEmbedDuo(P1, P2)
-            await channel.send('After Action Report Is Ready For Deployment! [BETA/TESTING][v0.2.5]')
-            await channel.send(embed=embed)
-
-        elif roundType == 'squad-fpp':
-            print('temp squad')
-        else:
-            # if the game isn't solo, duo or squad (ex: war mode)
-            # then don't report and move on to the next playing player
-            continue
-
-
-
-
-    print('after: {}'.format(playingMembers))
+        print('after: {}'.format(playingMembers))
+        print('waiting for 60 seconds')
+        await asyncio.sleep(60)
 
 def makeEmbedSolo(P1):
 
