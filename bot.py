@@ -230,12 +230,11 @@ async def trackPUBGRounds():
         currentMatchID = PUBGstats.getLatestMatchID(gameName)
 
         # if player hasn't played a new game 
-        # then do nothing
-        # TODO add an OR statment to check if gameid
-        # has already been reported
-        if playingMembers[player] == currentMatchID:
+        # then do nothing OR if the game already
+        # has been reported (only happens in duo & squad)
+        if playingMembers[player] == currentMatchID or currentMatchID in gamesIDs:
             continue
-
+        
         # TODO make this the last thing to be made
         gamesIDs.add(currentMatchID)
         playingMembers[player] = currentMatchID
