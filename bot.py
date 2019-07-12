@@ -43,6 +43,12 @@ async def on_message(message):
         print('-------------------')
         await trackPUBGRounds()
         print('-------------------')
+    elif message.content.startswith('2check'):
+        print('-------------------')
+        getPlayingMembers(client.get_all_members())
+        print('current members: {}'.format(playingMembers))
+        print('current game IDs: {}'.format(gamesIDs))
+        print('-------------------')
 
     elif message.content.startswith('who is the best player in the world?'):
         await message.channel.send('Lionel Messi')
@@ -226,8 +232,9 @@ async def trackPUBGRounds():
             continue
 
         # TODO make this the last thing to be made
-        gamesIDs.add(playingMembers[player])
+        gamesIDs.add(currentMatchID)
         playingMembers[player] = currentMatchID
+        print('current match ID: {}'.format(currentMatchID))
 
         roundType = PUBGstats.getRoundType(gameName)
         print(roundType)
