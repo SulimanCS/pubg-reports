@@ -180,6 +180,7 @@ def getPlayingMembers(members):
         for activity in member.activities:
             if activity.name == PUBG:
                 gameName = getPUBGName(member.name)
+                PUBGStats.getPlayerInfo(gameName)
                 matchID = PUBGstats.getLatestMatchID(gameName)
                 #print(gameName)
                 playingMembers[member.name] = matchID
@@ -220,9 +221,12 @@ async def trackPUBGRounds():
     print('before: {}'.format(playingMembers))
     for player in playingMembers.keys():
         gameName = getPUBGName(player)
+
         if gameName == None:
             print('continue hit 2')
             continue
+       
+        PUBGstats.getPlayerInfo(gameName)
         currentMatchID = PUBGstats.getLatestMatchID(gameName)
 
         # if player hasn't played a new game 

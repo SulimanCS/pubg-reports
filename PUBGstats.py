@@ -308,7 +308,8 @@ def main():
     #getLastModfiedMatchFile()
     #getMatchInfo(getLatestMatchID('stx0'))
     #getTopThreeKillRank()
-    getRoundType('stx0')
+    #getRoundType('stx0')
+    return None
 
 
 
