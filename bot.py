@@ -159,7 +159,7 @@ def getPlayingMembers(members):
                     print(activity.name)
                     print(type(activity))
                     isPlaying = False
-                    if activity.name == PUBGs:
+                    if activity.name == PUBG:
                         isPlaying = True 
                         break 
                 #print('after for loop') 
@@ -224,6 +224,7 @@ async def trackPUBGRounds():
             print('continue hit 2')
             continue
         currentMatchID = PUBGstats.getLatestMatchID(gameName)
+
         # if player hasn't played a new game 
         # then do nothing
         # TODO add an OR statment to check if gameid
@@ -246,11 +247,18 @@ async def trackPUBGRounds():
             embed = makeEmbedSolo(P1)
             await channel.send('After Action Report Is Ready For Deployment! [BETA/TESTING][v0.2.5]')
             await channel.send(embed=embed)
-            continue
+            #continue
         elif roundType == 'duo-fpp':
-            print('temp')
+            print('temp duo')
+            P1 = PUBGstats.matchAnalysis(gameName)
+            P2name = PUBGstats.getTeamMembersNames(P1['name'], P1['win-rank'], 'duo')
+            P2 = PUBGstats.matchAnalysis(P2name)
+            embed = makeEmbedDuo(P1, P2)
+            await channel.send('After Action Report Is Ready For Deployment! [BETA/TESTING][v0.2.5]')
+            await channel.send(embed=embed)
+
         elif roundType == 'squad-fpp':
-            print('temp')
+            print('temp squad')
         else:
             # if the game isn't solo, duo or squad (ex: war mode)
             # then don't report and move on to the next playing player
