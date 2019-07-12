@@ -130,10 +130,12 @@ def formatLog(log):
 
     if log['walk-distance'] >= 1000:
         log['walk-distance'] = log['walk-distance']/1000
-        log['walk-distance'] = round(log['walk-distance'], 2)
+    log['walk-distance'] = round(log['walk-distance'], 2)
+    
     if log['time-survived'] >= 60:
         log['time-survived'] = log['time-survived']/60
-        log['time-survived'] = round(log['time-survived'], 2)
+    log['time-survived'] = round(log['time-survived'], 2)
+
     log['damage-dealt'] = int(log['damage-dealt'])
     log['longest-kill'] = round(log['longest-kill'], 2)
     return log
