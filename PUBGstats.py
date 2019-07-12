@@ -264,7 +264,21 @@ def getRoundType(player):
         gameMode = playerData['data']['attributes']['gameMode']
     return gameMode
 
+def getTeamMembersNames(player, rank, mode):
 
+    newestFile = getLastModfiedMatchFile()
+    with open (newestFile, 'r') as playerFile:
+        playerData = json.load(playerFile)
+        # TODO do squad mode 
+        if mode == 'duo':
+            for report in playerData['included']:
+                #print(report['type'])
+                if report['type']== 'participant':
+                    #print(True)
+                    #print(report['attributes']['stats']['name'])
+                    if report['attributes']['stats']['winPlace'] == rank and report['attributes']['stats']['name'] != player: 
+                        return report['attributes']['stats']['name']
+                    
 
 
 def main():
