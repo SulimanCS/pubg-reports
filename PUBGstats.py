@@ -43,8 +43,11 @@ def getPlayerInfo(player):
     #print(url)
 
     r = requests.get(url, headers=header)
+    
+    # TODO investigate this further
     if r.ok == False:
-        return
+        print('player not found')
+        return False
     r_dict = r.json()
 
     #print(r.json())
@@ -57,6 +60,7 @@ def getPlayerInfo(player):
     with open (filename, 'w') as f:
         json.dump(r_dict, f, indent=4)
 
+    return True
 
 def getLatestMatchID(player):
     
@@ -283,6 +287,8 @@ def getTeamMembersNames(player, rank, mode):
 
 
 def main():
+
+    # main is for testing purposes
 
     #getPlayerInfo('stx0')
     #getPlayerInfo('kojx')
