@@ -40,13 +40,11 @@ def getPlayerInfo(player):
     
     url = 'https://api.pubg.com/shards/steam/players?filter[playerNames]='
     url = url + player
-    #print(url)
 
     r = requests.get(url, headers=header)
     
     # TODO investigate this further
     if r.ok == False:
-        print('player not found')
         return False
     r_dict = r.json()
 
