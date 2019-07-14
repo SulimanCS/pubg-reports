@@ -23,9 +23,8 @@ def registerPlayer(discordName, PUBGName):
     
     result = checkRegistration(discordName, PUBGName)
 
-    # TODO CHECK IF PUBG NAME IS VALID
     isPUBGPlayer = PUBGstats.getPlayerInfo(PUBGName)
-    print(isPUBGPlayer)
+    #print(isPUBGPlayer)
     if isPUBGPlayer == False:
         result = -1
 
@@ -56,6 +55,17 @@ def registerPlayer(discordName, PUBGName):
     else:
         return False
 
+def getRegisteredPlayers():
+
+    with open(filename, 'r') as fil:
+        r = csv.reader(fil)
+        next(r)
+        players = list(r)
+
+    return players
+
+
+
 def main():
 
         
@@ -71,6 +81,7 @@ def main():
     print('case su, none, result: {}'.format(result))
     '''
     # TESTING registerPlayer, success
+    '''
     result = registerPlayer('suli', 'stx0')
     print('case suli, stx0, result: {}'.format(result))
     print('===========================')
@@ -79,6 +90,8 @@ def main():
     print('===========================')
     result = registerPlayer('su', 'non')
     print('case su, non, result: {}'.format(result))
+    '''
+    players = getRegisteredPlayers()
     return None
 
 

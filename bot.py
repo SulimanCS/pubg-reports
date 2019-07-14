@@ -65,6 +65,10 @@ async def on_message(message):
         else:
             await message.channel.send('**Registration is porhibited** in all channels other than the __**{}**__ channel'.format(regChannel.name))
 
+    elif message.content.startswith('!users'):
+        players = registration.getRegisteredPlayers()
+        embed = makeEmbedRegisteredPlayers(players)
+        await message.channel.send(embed=embed)
 
 
     elif message.content.startswith('who is the best player in the world?'):
@@ -349,6 +353,14 @@ def makeEmbedDuo(P1, P2):
     embed.add_field(name="**{}**".format(P1['name']), value="**kills:  {}**\n**headshots: {}**\n**assists: {}**\n**knocks: {}**\n**revives: {}**\n**heals: {}**\n**boosts: {}**\n**walk distance: {}{unitWalk}\nkill rank: {}**\n**weapons acquired: {}**\n**time survived: {}{timeUnit}**\n**damage dealt: {}**\n**longest kill: {}m**\n**kill streak: {}**".format(P1['kills'], P1['headshots'], P1['assists'], P1['knocks'], P1['revives'], P1['heals'], P1['boosts'], P1['walk-distance'], P1['kill-rank'], P1['weapons-acquired'], P1['time-survived'], P1['damage-dealt'], P1['longest-kill'], P1['kill-streak'], unitWalk='km' if originalP1['walk-distance'] >= 1000 else 'm', timeUnit='m' if originalP1['time-survived'] >= 60 else 's'), inline=True)
 
     embed.add_field(name="**{}**".format(P2['name']), value="**kills:  {}**\n**headshots: {}**\n**assists: {}**\n**knocks: {}**\n**revives: {}**\n**heals: {}**\n**boosts: {}**\n**walk distance: {}{unitWalk}\nkill rank: {}**\n**weapons acquired: {}**\n**time survived: {}{timeUnit}**\n**damage dealt: {}**\n**longest kill: {}m**\n**kill streak: {}**".format(P2['kills'], P2['headshots'], P2['assists'], P2['knocks'], P2['revives'], P2['heals'], P2['boosts'], P2['walk-distance'], P2['kill-rank'], P2['weapons-acquired'], P2['time-survived'], P2['damage-dealt'], P2['longest-kill'], P2['kill-streak'], unitWalk='km' if originalP2['walk-distance'] >= 1000 else 'm', timeUnit='m' if originalP2['time-survived'] >= 60 else 's'), inline=True)
+    return embed
+
+def makeEmbedRegisteredPlayers(players):
+
+    embed=discord.Embed(title=" ", color=0xffffff)
+    embed.set_author(name="Registered Users")
+    for player in players:
+        embed.add_field(name=player[0], value=player[1], inline=False)
     return embed
 
 #client.loop.create_task(reportDuo())
