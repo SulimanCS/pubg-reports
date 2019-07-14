@@ -64,7 +64,16 @@ def getRegisteredPlayers():
 
     return players
 
+def getSpecificPlayer(discordName):
 
+    with open(filename, 'r') as fil:
+        r = csv.reader(fil)
+        next(r)
+        for player in r:
+            if player[0] == discordName:
+                return player[1]
+
+    return None 
 
 def main():
 
@@ -91,7 +100,8 @@ def main():
     result = registerPlayer('su', 'non')
     print('case su, non, result: {}'.format(result))
     '''
-    players = getRegisteredPlayers()
+    #players = getRegisteredPlayers()
+    print(getSpecificPlayer('suli'))
     return None
 
 

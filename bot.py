@@ -226,13 +226,16 @@ def getPlayingMembers(members):
 
 # TODO make this a csv file that can be altered from the discord server
 def getPUBGName(name):
-    
+
+    return registration.getSpecificPlayer(name)
+    '''
     if name == 'suli':
         return 'stx0'
     elif name == 'jok':
         return 'kojx'
     else:
         return None
+    '''
 
 async def trackPUBGRounds():
 
