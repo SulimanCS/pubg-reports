@@ -9,8 +9,9 @@ global playingMembers, gamesIDs, PUBG
 playingMembers, gamesIDs = {}, set()
 PUBG = "PLAYERUNKNOWN'S BATTLEGROUNDS"
 
-global regCommand
+global regCommand, regChannelID
 regCommand = '!reg'
+regChannelID = 599761087860310071
 
 TOKEN = None
 with open ('TOKENS.csv', 'r') as TOKENS:
@@ -55,11 +56,14 @@ async def on_message(message):
         print('current game IDs: {}'.format(gamesIDs))
         print('-------------------')
     elif message.content.startswith(regCommand):
-        discordName = message.author.name
-        PUBGName = message.content[len(regCommand)+1:]
-        msg = registration.registerPlayer(discordName, PUBGName)
-        channel = message.channel
-        await channel.send(msg)
+        regChannel = client.get_channel(regChannelID)
+        if message.channel.id == regChannelID:
+            discordName = message.author.name
+            PUBGName = message.content[len(regCommand)+1:]
+            msg = registration.registerPlayer(discordName, PUBGName)
+            await regChannel.send(msg)
+        else:
+            await message.channel.send('**Registration is porhibited** in all channels other than the __**{}**__ channel'.format(regChannel.name))
 
 
 
@@ -236,6 +240,10 @@ async def trackPUBGRounds():
     while True:
         getPlayingMembers(client.get_all_members())
         print('===========================================')
+
+        #playingMembers['suli'] = '6c0f67d9-800a-4ac2-8588-6d2bbdd7c09b'
+        #playingMembers['jok'] = '6c0f67588-6d2bbdd7c09b'
+
         print('before: {}'.format(playingMembers))
         for player in playingMembers.keys():
             print('member: {}'.format(player))
