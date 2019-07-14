@@ -3,10 +3,14 @@ import csv
 import asyncio
 import datetime
 import PUBGstats
+import registration
 
 global playingMembers, gamesIDs, PUBG 
 playingMembers, gamesIDs = {}, set()
 PUBG = "PLAYERUNKNOWN'S BATTLEGROUNDS"
+
+global regCommand
+regCommand = '!reg'
 
 TOKEN = None
 with open ('TOKENS.csv', 'r') as TOKENS:
@@ -35,6 +39,7 @@ async def on_message(message):
         return
     if message.content.startswith('$hello'):
         await message.channel.send('Hello!')
+
     elif message.content.startswith('check'):
         print('-------------------')
         getPlayingMembers(client.get_all_members())
@@ -49,14 +54,24 @@ async def on_message(message):
         print('current members: {}'.format(playingMembers))
         print('current game IDs: {}'.format(gamesIDs))
         print('-------------------')
+    elif message.content.startswith(regCommand):
+        discordName = message.author.name
+        PUBGName = message.content[len(regCommand)+1:]
+        msg = registration.registerPlayer(discordName, PUBGName)
+        channel = message.channel
+        await channel.send(msg)
+
+
 
     elif message.content.startswith('who is the best player in the world?'):
         await message.channel.send('Lionel Messi')
+
     elif message.content.startswith('!top3'):
         # TODO make TOP3 depends on who requested it
         top3 = PUBGstats.getTopThreeKillRank()
         string = '#1: {} with {} kills\n #2: {} with {} kills\n #3: {} with {} kills'.format(top3[0][0], top3[0][1], top3[1][0], top3[1][1], top3[2][0], top3[2][1])
         await message.channel.send(string)
+
     elif message.content.startswith('bye'):
         await message.channel.send('logging out!')
         await client.logout()
