@@ -173,8 +173,9 @@ def getPlayingMembers(members):
         #print(member.status)
         #print(type(str(member.status)))
 
-        #TODO make gameName here
-        # and if return is None then exit
+        gameName = getPUBGName(member.name)
+        if gameName == None:
+            continue
 
         if member.name in playingMembers:
             if len(member.activities) == 0:
