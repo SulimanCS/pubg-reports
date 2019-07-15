@@ -267,22 +267,45 @@ def getRoundType(player):
         gameMode = playerData['data']['attributes']['gameMode']
     return gameMode
 
-def getTeamMembersNames(player, rank, mode):
-
+def getTeamMembersNames(player, mode):
+    
     newestFile = getLastModfiedMatchFile()
+    currentPlayerTeamID = None
     with open (newestFile, 'r') as playerFile:
         playerData = json.load(playerFile)
-        # TODO do squad mode 
+        #TODO do squads!
         if mode == 'duo':
             for report in playerData['included']:
-                #print(report['type'])
                 if report['type']== 'participant':
-                    #print(True)
-                    #print(report['attributes']['stats']['name'])
-                    if report['attributes']['stats']['winPlace'] == rank and report['attributes']['stats']['name'] != player: 
-                        return report['attributes']['stats']['name']
-                    
-
+                    if report['attributes']['stats']['name'] == player:
+                        currentPlayerTeamID = report['id']
+                        break
+            if currentPlayerTeamID == None:
+                # if player not found, exit
+                return None
+            for report in playerData['included']:
+                if report['type']== 'roster':
+                    if len(report['relationships']['participants']['data']) == 1:
+                        if report['relationships']['participants']['data'][0]['id'] == currentPlayerTeamID:
+                            # if team size in duo is equal to one player,
+                            # then it means that the player doesn't have 
+                            # a partner. It's rare in duo, but it happens
+                            return None
+                    else: 
+                        if report['relationships']['participants']['data'][0]['id'] == currentPlayerTeamID:
+                            secondTeamMemberID = report['relationships']['participants']['data'][1]['id']
+                            break
+                        elif report['relationships']['participants']['data'][1]['id'] == currentPlayerTeamID:
+                            secondTeamMemberID = report['relationships']['participants']['data'][0]['id']
+                            break
+            if secondTeamMemberID == None:
+                return None
+            for report in playerData['included']:
+                if report['type']== 'participant':
+                    if report['id'] == secondTeamMemberID:
+                       # other team member found, return the name
+                       return report['attributes']['stats']['name']
+                        
 
 def main():
 
@@ -310,10 +333,21 @@ def main():
     #print('result is: {}'.format(result))
 
     #--------------------------
+
     #getLastModfiedMatchFile()
     #getMatchInfo(getLatestMatchID('stx0'))
     #getTopThreeKillRank()
     #getRoundType('stx0')
+
+    #--------------------------
+    
+    P1 = matchAnalysis('stx0')
+    print('=========111=======')
+    P2name = getTeamMembersNames(P1['name'], 'duo')
+    print(P2name)
+
+    #--------------------------
+
     return None
 
 
