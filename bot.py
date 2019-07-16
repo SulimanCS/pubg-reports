@@ -280,27 +280,33 @@ async def trackPUBGRounds():
             print('current match ID: {}'.format(currentMatchID))
 
             roundType = PUBGstats.getRoundType(gameName)
-            print(roundType)
 
             # TODO cover tpp as well
             if roundType == 'solo-fpp':
-                print('temp')
                 P1 = PUBGstats.matchAnalysis(gameName)
                 embed = makeEmbedSolo(P1)
-                await channel.send('After Action Report Is Ready For Deployment! [BETA/TESTING][v0.5.0]')
+                await channel.send('After Action Report Is Ready For Deployment! [BETA/TESTING][v0.7.0]')
                 await channel.send(embed=embed)
                 #continue
             elif roundType == 'duo-fpp':
-                print('temp duo')
                 P1 = PUBGstats.matchAnalysis(gameName)
                 P2name = PUBGstats.getTeamMembersNames(P1['name'], 'duo')
                 P2 = PUBGstats.matchAnalysis(P2name)
                 embed = makeEmbedDuo(P1, P2)
-                await channel.send('After Action Report Is Ready For Deployment! [BETA/TESTING][v0.5.0]')
+                await channel.send('After Action Report Is Ready For Deployment! [BETA/TESTING][v0.7.0]')
                 await channel.send(embed=embed)
 
             elif roundType == 'squad-fpp':
-                print('temp squad')
+                P1 = PUBGstats.matchAnalysis(gameName)
+                P1squad = PUBGstats.getTeamMembersNames(P1['name'], 'squad')
+                logs = None
+                if P1squad != None:
+                    logs = []
+                    for player in P1squad:
+                        logs.append(PUBGstats.matchAnalysis(player))
+                embed = makeEmbedSquad(P1, logs)
+                await channel.send('After Action Report Is Ready For Deployment! [BETA/TESTING][v0.7.0]')
+                await channel.send(embed=embed)
             else:
                 # if the game isn't solo, duo or squad (ex: war mode)
                 # then don't report and move on to the next playing player
