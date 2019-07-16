@@ -282,13 +282,13 @@ async def trackPUBGRounds():
             roundType = PUBGstats.getRoundType(gameName)
 
             # TODO cover tpp as well
-            if roundType == 'solo-fpp':
+            if roundType == 'solo-fpp' or roundType == 'solo':
                 P1 = PUBGstats.matchAnalysis(gameName)
                 embed = makeEmbedSolo(P1)
                 await channel.send('After Action Report Is Ready For Deployment! [BETA/TESTING][v0.7.0]')
                 await channel.send(embed=embed)
                 #continue
-            elif roundType == 'duo-fpp':
+            elif roundType == 'duo-fpp' or roundType == 'duo':
                 P1 = PUBGstats.matchAnalysis(gameName)
                 P2name = PUBGstats.getTeamMembersNames(P1['name'], 'duo')
                 P2 = PUBGstats.matchAnalysis(P2name)
@@ -296,7 +296,7 @@ async def trackPUBGRounds():
                 await channel.send('After Action Report Is Ready For Deployment! [BETA/TESTING][v0.7.0]')
                 await channel.send(embed=embed)
 
-            elif roundType == 'squad-fpp':
+            elif roundType == 'squad-fpp' or roundType == 'squad':
                 P1 = PUBGstats.matchAnalysis(gameName)
                 P1squad = PUBGstats.getTeamMembersNames(P1['name'], 'squad')
                 logs = None
