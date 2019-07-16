@@ -273,7 +273,6 @@ def getTeamMembersNames(player, mode):
     currentPlayerTeamID = None
     with open (newestFile, 'r') as playerFile:
         playerData = json.load(playerFile)
-        #TODO do squads!
         if mode == 'duo':
             for report in playerData['included']:
                 if report['type']== 'participant':
@@ -305,6 +304,50 @@ def getTeamMembersNames(player, mode):
                     if report['id'] == secondTeamMemberID:
                        # other team member found, return the name
                        return report['attributes']['stats']['name']
+        if mode == 'squad':
+            for report in playerData['included']:
+                if report['type']== 'participant':
+                    if report['attributes']['stats']['name'] == player:
+                        currentPlayerTeamID = report['id']
+                        break
+            if currentPlayerTeamID == None:
+                # if player not found, exit
+                return None
+            for report in playerData['included']:
+                if report['type']== 'roster':
+                    if len(report['relationships']['participants']['data']) == 1:
+                        if report['relationships']['participants']['data'][0]['id'] == currentPlayerTeamID:
+                            # if team size in a squad is equal to one player,
+                            # then it means that the player doesn't have 
+                            # any partners
+                            return None
+                    else:
+                        squad = None
+                        for player in report['relationships']['participants']['data']:
+                            if player['id'] == currentPlayerTeamID:
+                                squad = report['relationships']['participants']['data']
+                                break 
+            if squad == None or len(squad) == 1:
+                return None
+            squadIDs = []
+            for player in squad:
+                if player['id'] == currentPlayerTeamID:
+                    continue
+                squadIDs.append(player['id'])
+            squadPlayerNames = []
+            for report in playerData['included']:
+                if report['type']== 'participant':
+                    if squadIDs == []:
+                        # if all players are found,
+                        # return their names, no need
+                        # to loop through all players
+                        return squadPlayerNames
+                    if report['id'] in squadIDs:
+                        squadPlayerNames.append(report['attributes']['stats']['name'])
+                        squadIDs.remove(report['id'])
+            return squadPlayerNames
+        else:
+            return None
                         
 
 def main():
