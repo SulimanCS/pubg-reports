@@ -4,6 +4,7 @@ import asyncio
 import datetime
 import PUBGstats
 import registration
+import os
 
 global playingMembers, gamesIDs, PUBG 
 playingMembers, gamesIDs = {}, set()
@@ -13,8 +14,14 @@ global regCommand, regChannelID
 regCommand = '!reg'
 regChannelID = 599761087860310071
 
+global TOKENSFILE
+TOKENSFILE = 'TOKENS.csv'
+
 TOKEN = None
-with open ('TOKENS.csv', 'r') as TOKENS:
+directory = os.path.dirname(__file__)
+filepath = os.path.join(directory, TOKENSFILE)
+print(filepath)
+with open (filepath, 'r') as TOKENS:
     TOKENSreader = csv.reader(TOKENS)
 
     for key in TOKENSreader:

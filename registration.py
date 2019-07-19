@@ -1,12 +1,15 @@
 import csv
 import PUBGstats
+import os
 
-global filename
-filename = 'PLAYERS.csv'
+global PLAYERSFILE, filepath
+PLAYERSFILE = 'PLAYERS.csv'
+directory = os.path.dirname(__file__)
+filepath = os.path.join(directory, PLAYERSFILE)
 
 def checkRegistration(discordName, PUBGName):
 
-    with open(filename, 'r') as fil:
+    with open(filepath, 'r') as fil:
         r = csv.reader(fil)
         next(r) # skip headers
         lineNum = 1
@@ -34,18 +37,18 @@ def registerPlayer(discordName, PUBGName):
     if result == True and isinstance(result, bool) == True:
         return 'User ({}) is already registered with the PUBG name ({})'.format(discordName, PUBGName)
     elif result == False:
-        with open(filename, 'a') as fil:
+        with open(filepath, 'a') as fil:
             toAdd = [discordName, PUBGName]
             w = csv.writer(fil)
             w.writerows([toAdd])
             return 'User ({}) is now registered with the PUBG name ({})'.format(discordName, PUBGName)
     elif isinstance(result, int) == True and result > 0:
-        with open(filename, 'r') as fil:
+        with open(filepath, 'r') as fil:
             r = csv.reader(fil)
             lists = list(r)
             oldPUBGName = lists[result][1] 
             lists[result][1] = PUBGName 
-            with open(filename, 'w') as wfil:
+            with open(filepath, 'w') as wfil:
                 w = csv.writer(wfil)
                 w.writerows(lists)
         return 'User ({}) PUBG name has been updated from ({}) to ({})'.format(discordName, oldPUBGName, PUBGName)
@@ -57,7 +60,7 @@ def registerPlayer(discordName, PUBGName):
 
 def getRegisteredPlayers():
 
-    with open(filename, 'r') as fil:
+    with open(filepath, 'r') as fil:
         r = csv.reader(fil)
         next(r)
         players = list(r)
@@ -66,7 +69,7 @@ def getRegisteredPlayers():
 
 def getSpecificPlayer(discordName):
 
-    with open(filename, 'r') as fil:
+    with open(filepath, 'r') as fil:
         r = csv.reader(fil)
         next(r)
         for player in r:

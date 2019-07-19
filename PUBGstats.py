@@ -5,12 +5,19 @@ from datetime import datetime
 import os
 import glob
 
+global TOKENSFILE
+TOKENSFILE = 'TOKENS.csv'
+
+global PLAYERDATA, MATCHDATA
+PLAYERDATA, MATCHDATA = 'playerdata', 'matchdata'
 
 def getToken():
 
     TOKEN = None
-
-    with open ('TOKENS.csv', 'r') as TOKENS:
+    
+    directory = os.path.dirname(__file__)
+    filepath = os.path.join(directory, TOKENSFILE)
+    with open (filepath, 'r') as TOKENS:
 
         TOKENSreader = csv.reader(TOKENS)
 
@@ -52,10 +59,10 @@ def getPlayerInfo(player):
     #print(type(r_dict))
 
     filename = player + '.json'
-    filename = 'playerdata/' + filename
+    directory = os.path.dirname(__file__)
+    filepath = os.path.join(directory, PLAYERDATA, filename)
     
-    #with open ('playerdata/data.json', 'w') as f:
-    with open (filename, 'w') as f:
+    with open (filepath, 'w') as f:
         json.dump(r_dict, f, indent=4)
 
     return True
@@ -63,8 +70,10 @@ def getPlayerInfo(player):
 def getLatestMatchID(player):
     
     filename = player + '.json'
-    filename = 'playerdata/' + filename
-    with open (filename, 'r') as playerFile:
+    directory = os.path.dirname(__file__)
+    filepath = os.path.join(directory, PLAYERDATA, filename)
+
+    with open (filepath, 'r') as playerFile:
         playerData = json.load(playerFile)
         '''
         for info in playerData:
@@ -91,7 +100,6 @@ def getMatchInfo(matchID):
 
     url = 'https://api.pubg.com/shards/steam/matches/'
     url = url + matchID 
-    #print(url)
 
     r = requests.get(url, headers=header)
     if r.ok == False:
@@ -99,21 +107,19 @@ def getMatchInfo(matchID):
 
     r_dict = r.json()
 
-    #filename = datetime.now().isoformat(timespec='minutes') + '.json'
     filename = matchID + '.json'
-    filename = 'matchdata/' + filename
-    #with open ('playerdata/data.json', 'w') as f:
-    with open (filename, 'w') as f:
+    directory = os.path.dirname(__file__)
+    filepath = os.path.join(directory, MATCHDATA, filename)
+
+    with open (filepath, 'w') as f:
         json.dump(r_dict, f, indent=4)
     
 def getLastModfiedMatchFile():
 
-    #filepath = '/home/suliman/Documents/Projects/PUBGanalysis/matchdata/*.json'
-    filepath = os.getcwd()
-    filepath = filepath + '/matchdata/*.json'
-    files = glob.glob(filepath)
-    #print(filepath)
-    #print(max(files, key=os.path.getctime))
+    directory = os.path.dirname(__file__)
+    filepaths = os.path.join(directory, MATCHDATA, '*.json')
+    files = glob.glob(filepaths)
+
     return max(files, key=os.path.getctime)
     
 def matchAnalysis(player):
@@ -127,8 +133,7 @@ def matchAnalysis(player):
    
     # TODO this needs to change!
     newestFile = getLastModfiedMatchFile()
-    #with open ('matchdata/test.json', 'r') as playerFile:
-    #print(newestFile)
+
     with open (newestFile, 'r') as playerFile:
         playerData = json.load(playerFile)
 
@@ -384,12 +389,18 @@ def main():
 
     #--------------------------
     
-    P1 = matchAnalysis('stx0')
-    print('=========111=======')
-    P2name = getTeamMembersNames(P1['name'], 'duo')
-    print(P2name)
+    #P1 = matchAnalysis('stx0')
+    #print('=========111=======')
+    #P2name = getTeamMembersNames(P1['name'], 'duo')
+    #print(P2name)
 
     #--------------------------
+
+    #getPlayerInfo('stx0')
+    #print(getLatestMatchID('stx0'))
+    #getMatchInfo(getLatestMatchID('stx0'))
+    #print(getLastModfiedMatchFile())
+    #print(matchAnalysis('stx0'))
 
     return None
 
