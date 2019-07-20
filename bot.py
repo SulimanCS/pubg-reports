@@ -213,8 +213,8 @@ def getPlayingMembers(members):
         for activity in member.activities:
             if activity.name == PUBG:
                 gameName = getPUBGName(member.name)
-                PUBGstats.getPlayerInfo(gameName)
-                matchID = PUBGstats.getLatestMatchID(gameName)
+                playerProfile = PUBGstats.getPlayerInfo(gameName)
+                matchID = PUBGstats.getLatestMatchID(playerProfile)
                 #print(gameName)
                 playingMembers[member.name] = matchID
                 gamesIDs.add(matchID)
@@ -267,8 +267,8 @@ async def trackPUBGRounds():
                 print('continue hit 2')
                 continue
            
-            PUBGstats.getPlayerInfo(gameName)
-            currentMatchID = PUBGstats.getLatestMatchID(gameName)
+            playerProfile = PUBGstats.getPlayerInfo(gameName)
+            currentMatchID = PUBGstats.getLatestMatchID(playerProfile)
 
             # if player hasn't played a new game 
             # then do nothing OR if the game already
@@ -281,36 +281,35 @@ async def trackPUBGRounds():
                     print('continue hit 4')
                 continue
             
-            # TODO make this the last thing to be made
             gamesIDs.add(currentMatchID)
             playingMembers[player] = currentMatchID
             print('current match ID: {}'.format(currentMatchID))
 
-            roundType = PUBGstats.getRoundType(gameName)
+            matchData = PUBGstats.getMatchInfo(currentMatchID) 
+            roundType = PUBGstats.getRoundType(matchData)
 
-            # TODO cover tpp as well
             if roundType == 'solo-fpp' or roundType == 'solo':
-                P1 = PUBGstats.matchAnalysis(gameName)
+                P1 = PUBGstats.matchAnalysis(gameName, matchData)
                 embed = makeEmbedSolo(P1)
                 await channel.send('After Action Report Is Ready For Deployment! [BETA/TESTING][v0.7.0]')
                 await channel.send(embed=embed)
                 #continue
             elif roundType == 'duo-fpp' or roundType == 'duo':
-                P1 = PUBGstats.matchAnalysis(gameName)
-                P2name = PUBGstats.getTeamMembersNames(P1['name'], 'duo')
-                P2 = PUBGstats.matchAnalysis(P2name)
+                P1 = PUBGstats.matchAnalysis(gameName, matchData)
+                P2name = PUBGstats.getTeamMembersNames(P1['name'], 'duo', matchData)
+                P2 = PUBGstats.matchAnalysis(P2name, matchData)
                 embed = makeEmbedDuo(P1, P2)
                 await channel.send('After Action Report Is Ready For Deployment! [BETA/TESTING][v0.7.0]')
                 await channel.send(embed=embed)
 
             elif roundType == 'squad-fpp' or roundType == 'squad':
-                P1 = PUBGstats.matchAnalysis(gameName)
-                P1squad = PUBGstats.getTeamMembersNames(P1['name'], 'squad')
+                P1 = PUBGstats.matchAnalysis(gameName, matchData)
+                P1squad = PUBGstats.getTeamMembersNames(P1['name'], 'squad', matchData)
                 logs = None
                 if P1squad != None:
                     logs = []
                     for player in P1squad:
-                        logs.append(PUBGstats.matchAnalysis(player))
+                        logs.append(PUBGstats.matchAnalysis(player, matchData))
                 embed = makeEmbedSquad(P1, logs)
                 await channel.send('After Action Report Is Ready For Deployment! [BETA/TESTING][v0.7.0]')
                 await channel.send(embed=embed)

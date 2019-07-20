@@ -65,33 +65,17 @@ def getPlayerInfo(player):
     with open (filepath, 'w') as f:
         json.dump(r_dict, f, indent=4)
 
-    return True
+    return r_dict
 
-def getLatestMatchID(player):
+def getLatestMatchID(playerProfile):
+
+    playerData = playerProfile
     
-    filename = player + '.json'
-    directory = os.path.dirname(__file__)
-    filepath = os.path.join(directory, PLAYERDATA, filename)
-
-    with open (filepath, 'r') as playerFile:
-        playerData = json.load(playerFile)
-        '''
-        for info in playerData:
-            print(info)
-            #print(playerData['data'])
-            for types in playerData['data']:
-                print(types)
-                test = types
-        '''
-    '''
-    print('------------------------------')
-    print(test['relationships']['matches'])
-    matches = test['relationships']['matches']
-    print('------------------------------')
-    print(matches['data'][0]['id'])
-    '''
-
-    final = playerData['data'][0]['relationships']['matches']['data'][0]['id']
+    try:
+        final = playerData['data'][0]['relationships']['matches']['data'][0]['id']
+    except IndexError as error:
+        print('Player ({}) has not played a single PUBG game yet, error: {}'.format(playerData['data'][0]['attributes']['name'], error))
+        final = None
     #print(final)
 
     return final
@@ -113,6 +97,8 @@ def getMatchInfo(matchID):
 
     with open (filepath, 'w') as f:
         json.dump(r_dict, f, indent=4)
+
+    return r_dict
     
 def getLastModfiedMatchFile():
 
@@ -122,7 +108,7 @@ def getLastModfiedMatchFile():
 
     return max(files, key=os.path.getctime)
     
-def matchAnalysis(player):
+def matchAnalysis(player, matchData):
   
     log = {'name': None, 'kills': None, 'knocks': None, 'assists': None,
            'headshots': None, 'revives': None, 'heals': None,
@@ -131,46 +117,6 @@ def matchAnalysis(player):
            'damage-dealt': None, 'longest-kill': None, 'kill-streak': None,
            'win-rank': None}
    
-    # TODO this needs to change!
-    newestFile = getLastModfiedMatchFile()
-
-    with open (newestFile, 'r') as playerFile:
-        playerData = json.load(playerFile)
-
-        #for info in playerData:
-            #print(info)
-        #print(playerData['included'][0]['type'])
-        # if participant, then check the name
-        #print(playerData['included'][0]['attributes']['stats'])
-        
-        #print(len(playerData['included']))
-        #print('---------------------')
-        for report in playerData['included']:
-            #print(report['type'])
-            if report['type']== 'participant':
-                #print(True)
-                #print(report['attributes']['stats']['name'])
-                if report['attributes']['stats']['name'] == player: 
-                    #print('kills: {}'.format(report['attributes']['stats']['kills']))
-                    log['name'] = report['attributes']['stats']['name']
-                    log['kills'] = report['attributes']['stats']['kills']
-                    log['knocks'] = report['attributes']['stats']['DBNOs']
-                    log['assists'] = report['attributes']['stats']['assists']
-                    log['headshots'] = report['attributes']['stats']['headshotKills']
-                    log['revives'] = report['attributes']['stats']['revives']
-                    log['heals'] = report['attributes']['stats']['heals']
-                    log['boosts'] = report['attributes']['stats']['boosts']
-                    log['walk-distance'] = report['attributes']['stats']['walkDistance']
-                    log['kill-rank'] = report['attributes']['stats']['killPlace']
-                    log['weapons-acquired'] = report['attributes']['stats']['weaponsAcquired']
-                    log['time-survived'] = report['attributes']['stats']['timeSurvived']
-                    log['damage-dealt'] = report['attributes']['stats']['damageDealt']
-                    log['longest-kill'] = report['attributes']['stats']['longestKill']
-                    log['kill-streak'] = report['attributes']['stats']['killStreaks']
-                    log['win-rank'] = report['attributes']['stats']['winPlace']
-                    
-
-                    return log
             
 #def checkNewMatch(player, currentMatchID):
 #
@@ -233,6 +179,32 @@ def fetchDuoGame():
     getLastModfiedMatchFile()
     #print('returned P1: {}, P2: {}.'.format(logP1,logP2))
     return logP1, logP2
+    for report in matchData['included']:
+        #print(report['type'])
+        if report['type']== 'participant':
+            #print(True)
+            #print(report['attributes']['stats']['name'])
+            if report['attributes']['stats']['name'] == player: 
+                #print('kills: {}'.format(report['attributes']['stats']['kills']))
+                log['name'] = report['attributes']['stats']['name']
+                log['kills'] = report['attributes']['stats']['kills']
+                log['knocks'] = report['attributes']['stats']['DBNOs']
+                log['assists'] = report['attributes']['stats']['assists']
+                log['headshots'] = report['attributes']['stats']['headshotKills']
+                log['revives'] = report['attributes']['stats']['revives']
+                log['heals'] = report['attributes']['stats']['heals']
+                log['boosts'] = report['attributes']['stats']['boosts']
+                log['walk-distance'] = report['attributes']['stats']['walkDistance']
+                log['kill-rank'] = report['attributes']['stats']['killPlace']
+                log['weapons-acquired'] = report['attributes']['stats']['weaponsAcquired']
+                log['time-survived'] = report['attributes']['stats']['timeSurvived']
+                log['damage-dealt'] = report['attributes']['stats']['damageDealt']
+                log['longest-kill'] = report['attributes']['stats']['longestKill']
+                log['kill-streak'] = report['attributes']['stats']['killStreaks']
+                log['win-rank'] = report['attributes']['stats']['winPlace']
+                
+
+                return log
 
 def getTopThreeKillRank():
 
@@ -260,99 +232,91 @@ def getTopThreeKillRank():
 
     return killLog
 
-def getRoundType(player):
+def getRoundType(matchData):
 
-    getPlayerInfo(player)
-    matchID = getLatestMatchID(player)
-    getMatchInfo(matchID)
-    newestFile = getLastModfiedMatchFile()
-
-    with open (newestFile, 'r') as playerFile:
-        playerData = json.load(playerFile)
-        gameMode = playerData['data']['attributes']['gameMode']
+    gameMode = matchData['data']['attributes']['gameMode']
     return gameMode
 
-def getTeamMembersNames(player, mode):
+def getTeamMembersNames(player, mode, matchData):
     
     newestFile = getLastModfiedMatchFile()
     currentPlayerTeamID = None
-    with open (newestFile, 'r') as playerFile:
-        playerData = json.load(playerFile)
-        if mode == 'duo':
-            for report in playerData['included']:
-                if report['type']== 'participant':
-                    if report['attributes']['stats']['name'] == player:
-                        currentPlayerTeamID = report['id']
-                        break
-            if currentPlayerTeamID == None:
-                # if player not found, exit
-                return None
-            for report in playerData['included']:
-                if report['type']== 'roster':
-                    if len(report['relationships']['participants']['data']) == 1:
-                        if report['relationships']['participants']['data'][0]['id'] == currentPlayerTeamID:
-                            # if team size in duo is equal to one player,
-                            # then it means that the player doesn't have 
-                            # a partner. It's rare in duo, but it happens
-                            return None
-                    else: 
-                        if report['relationships']['participants']['data'][0]['id'] == currentPlayerTeamID:
-                            secondTeamMemberID = report['relationships']['participants']['data'][1]['id']
-                            break
-                        elif report['relationships']['participants']['data'][1]['id'] == currentPlayerTeamID:
-                            secondTeamMemberID = report['relationships']['participants']['data'][0]['id']
-                            break
-            if secondTeamMemberID == None:
-                return None
-            for report in playerData['included']:
-                if report['type']== 'participant':
-                    if report['id'] == secondTeamMemberID:
-                       # other team member found, return the name
-                       return report['attributes']['stats']['name']
-        if mode == 'squad':
-            for report in playerData['included']:
-                if report['type']== 'participant':
-                    if report['attributes']['stats']['name'] == player:
-                        currentPlayerTeamID = report['id']
-                        break
-            if currentPlayerTeamID == None:
-                # if player not found, exit
-                return None
-            for report in playerData['included']:
-                if report['type']== 'roster':
-                    if len(report['relationships']['participants']['data']) == 1:
-                        if report['relationships']['participants']['data'][0]['id'] == currentPlayerTeamID:
-                            # if team size in a squad is equal to one player,
-                            # then it means that the player doesn't have 
-                            # any partners
-                            return None
-                    else:
-                        squad = None
-                        for player in report['relationships']['participants']['data']:
-                            if player['id'] == currentPlayerTeamID:
-                                squad = report['relationships']['participants']['data']
-                                break 
-            if squad == None or len(squad) == 1:
-                return None
-            squadIDs = []
-            for player in squad:
-                if player['id'] == currentPlayerTeamID:
-                    continue
-                squadIDs.append(player['id'])
-            squadPlayerNames = []
-            for report in playerData['included']:
-                if report['type']== 'participant':
-                    if squadIDs == []:
-                        # if all players are found,
-                        # return their names, no need
-                        # to loop through all players
-                        return squadPlayerNames
-                    if report['id'] in squadIDs:
-                        squadPlayerNames.append(report['attributes']['stats']['name'])
-                        squadIDs.remove(report['id'])
-            return squadPlayerNames
-        else:
+    
+    if mode == 'duo':
+        for report in matchData['included']:
+            if report['type']== 'participant':
+                if report['attributes']['stats']['name'] == player:
+                    currentPlayerTeamID = report['id']
+                    break
+        if currentPlayerTeamID == None:
+            # if player not found, exit
             return None
+        for report in matchData['included']:
+            if report['type']== 'roster':
+                if len(report['relationships']['participants']['data']) == 1:
+                    if report['relationships']['participants']['data'][0]['id'] == currentPlayerTeamID:
+                        # if team size in duo is equal to one player,
+                        # then it means that the player doesn't have 
+                        # a partner. It's rare in duo, but it happens
+                        return None
+                else: 
+                    if report['relationships']['participants']['data'][0]['id'] == currentPlayerTeamID:
+                        secondTeamMemberID = report['relationships']['participants']['data'][1]['id']
+                        break
+                    elif report['relationships']['participants']['data'][1]['id'] == currentPlayerTeamID:
+                        secondTeamMemberID = report['relationships']['participants']['data'][0]['id']
+                        break
+        if secondTeamMemberID == None:
+            return None
+        for report in matchData['included']:
+            if report['type']== 'participant':
+                if report['id'] == secondTeamMemberID:
+                   # other team member found, return the name
+                   return report['attributes']['stats']['name']
+    if mode == 'squad':
+        for report in matchData['included']:
+            if report['type']== 'participant':
+                if report['attributes']['stats']['name'] == player:
+                    currentPlayerTeamID = report['id']
+                    break
+        if currentPlayerTeamID == None:
+            # if player not found, exit
+            return None
+        for report in matchData['included']:
+            if report['type']== 'roster':
+                if len(report['relationships']['participants']['data']) == 1:
+                    if report['relationships']['participants']['data'][0]['id'] == currentPlayerTeamID:
+                        # if team size in a squad is equal to one player,
+                        # then it means that the player doesn't have 
+                        # any partners
+                        return None
+                else:
+                    squad = None
+                    for player in report['relationships']['participants']['data']:
+                        if player['id'] == currentPlayerTeamID:
+                            squad = report['relationships']['participants']['data']
+                            break 
+        if squad == None or len(squad) == 1:
+            return None
+        squadIDs = []
+        for player in squad:
+            if player['id'] == currentPlayerTeamID:
+                continue
+            squadIDs.append(player['id'])
+        squadPlayerNames = []
+        for report in matchData['included']:
+            if report['type']== 'participant':
+                if squadIDs == []:
+                    # if all players are found,
+                    # return their names, no need
+                    # to loop through all players
+                    return squadPlayerNames
+                if report['id'] in squadIDs:
+                    squadPlayerNames.append(report['attributes']['stats']['name'])
+                    squadIDs.remove(report['id'])
+        return squadPlayerNames
+    else:
+        return None
                         
 
 def main():
