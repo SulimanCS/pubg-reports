@@ -50,7 +50,6 @@ def getPlayerInfo(player):
 
     r = requests.get(url, headers=header)
     
-    # TODO investigate this further
     if r.ok == False:
         return False
     r_dict = r.json()
@@ -117,68 +116,6 @@ def matchAnalysis(player, matchData):
            'damage-dealt': None, 'longest-kill': None, 'kill-streak': None,
            'win-rank': None}
    
-            
-#def checkNewMatch(player, currentMatchID):
-#
-#    matchID = getLatestMatchID(player)
-#    if matchID == currentMatchID:
-#        return False
-#    else:
-#        return True
-#
-
-global matchID1, matchID2
-# TODO these two needs to be NONE 
-matchID1 = '1'
-matchID2 = None
-def fetchDuoGame():
-
-    global matchID1, matchID2
-    #print('matchID1,2: {} and {}'.format(matchID1, matchID2))
-    
-    #matchID = '8199d282-4576-4d4e-9726-8a8dcfdb6c' 
-    #return checkNewMatch('stx0', matchID)
-    getPlayerInfo('stx0')
-    getPlayerInfo('kojx')
-
-    # store the match ID of the last played game
-    # once it gets updated, we know that the players
-    # entered a new game
-    if matchID1 == None and matchID2 == None:
-        matchID1 = getLatestMatchID('stx0')
-        matchID2 = getLatestMatchID('kojx')
-        print('return type 1 (init return, should be only once)')
-        return False
-
-    currentMatchID1 = getLatestMatchID('stx0')
-    currentMatchID2 = getLatestMatchID('kojx')
-    
-    # if current match ID matches with the previous
-    # one then the players did not play a new match
-    # therefore, return/exit
-    if currentMatchID1 == matchID1 and currentMatchID2 == matchID2:
-        print('return type 2')
-        return False
-    
-    # if the routine survived the returns
-    # then it means that the players entered
-    # a new match
-
-    # TODO this is for duos only currently
-    # support for solo and squads will come
-    # in the later versions
-
-    # since players entered a new match
-    # record their game stats and set 
-    # the ID of the match
-    getMatchInfo(currentMatchID1)
-    logP1 = matchAnalysis('stx0')
-    logP2 = matchAnalysis('kojx')
-    matchID1 = currentMatchID1
-    matchID2 = currentMatchID2
-    getLastModfiedMatchFile()
-    #print('returned P1: {}, P2: {}.'.format(logP1,logP2))
-    return logP1, logP2
     for report in matchData['included']:
         #print(report['type'])
         if report['type']== 'participant':
@@ -365,6 +302,14 @@ def main():
     #getMatchInfo(getLatestMatchID('stx0'))
     #print(getLastModfiedMatchFile())
     #print(matchAnalysis('stx0'))
+
+    #--------------------------
+
+    #print(getPlayerInfo('stx0'))
+    #print(getLatestMatchID(getPlayerInfo('stx0')))
+    #matchData = getMatchInfo(getLatestMatchID(getPlayerInfo('stx0')))
+    #print(matchAnalysis('stx0', matchData))
+    #print(getTeamMembersNames('stx0', 'duo', matchData))
 
     return None
 
