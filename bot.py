@@ -6,13 +6,30 @@ import PUBGstats
 import registration
 import os
 
+global DISCORDCONFIGFILE
+DISCORDCONFIGFILE = 'DISCORDCONFIG.csv'
+directory = os.path.dirname(__file__)
+filepath = os.path.join(directory, DISCORDCONFIGFILE)
+
+discordSettings = {}
+with open (filepath, 'r') as CONFIG:
+    CONFIGreader = csv.reader(CONFIG)
+
+    for line in CONFIGreader:
+        discordSettings[line[0]] = line[1]
+
 global playingMembers, gamesIDs, PUBG 
 playingMembers, gamesIDs = {}, set()
 PUBG = "PLAYERUNKNOWN'S BATTLEGROUNDS"
 
 global regCommand, regChannelID
 regCommand = '!reg'
-regChannelID = 599761087860310071
+regChannelID = int(discordSettings['registration'])
+
+global soloReportID, duoReportID, squadReportID
+soloReportID = int(discordSettings['soloReport'])
+duoReportID = int(discordSettings['duoReport']) 
+squadReportID = int(discordSettings['squadReport'])
 
 global TOKENSFILE
 TOKENSFILE = 'TOKENS.csv'
@@ -187,11 +204,17 @@ def getPUBGName(name):
     '''
 
 async def trackPUBGRounds():
+    
+    soloChannel= client.get_channel(soloReportID)
+    duoChannel = client.get_channel(duoReportID)
+    squadChannel = client.get_channel(squadReportID)
 
-    channel = client.get_channel(595459764348125194)
-    if channel == None:
-        await asyncio.sleep(5)
-        channel = client.get_channel(595459764348125194)
+    # TODO make the wait dynamic
+    if soloChannel == None or duoChannel == None or squadChannel == None:
+        await asyncio.sleep(10)
+        soloChannel = client.get_channel(soloReportID)
+        duoChannel = client.get_channel(duoReportID)
+        squadChannel = client.get_channel(squadReportID)
 
     while True:
         getPlayingMembers(client.get_all_members())
@@ -242,16 +265,16 @@ async def trackPUBGRounds():
             if roundType == 'solo-fpp' or roundType == 'solo':
                 P1 = PUBGstats.matchAnalysis(gameName, matchData)
                 embed = makeEmbedSolo(P1)
-                await channel.send('After Action Report Is Ready For Deployment! [BETA/TESTING][v0.7.0]')
-                await channel.send(embed=embed)
+                await soloChannel.send('After Action Report Is Ready For Deployment! [BETA/TESTING][v0.7.0]')
+                await soloChannel.send(embed=embed)
                 #continue
             elif roundType == 'duo-fpp' or roundType == 'duo':
                 P1 = PUBGstats.matchAnalysis(gameName, matchData)
                 P2name = PUBGstats.getTeamMembersNames(P1['name'], 'duo', matchData)
                 P2 = PUBGstats.matchAnalysis(P2name, matchData)
                 embed = makeEmbedDuo(P1, P2)
-                await channel.send('After Action Report Is Ready For Deployment! [BETA/TESTING][v0.7.0]')
-                await channel.send(embed=embed)
+                await duoChannel.send('After Action Report Is Ready For Deployment! [BETA/TESTING][v0.7.0]')
+                await duoChannel.send(embed=embed)
 
             elif roundType == 'squad-fpp' or roundType == 'squad':
                 P1 = PUBGstats.matchAnalysis(gameName, matchData)
@@ -262,8 +285,8 @@ async def trackPUBGRounds():
                     for player in P1squad:
                         logs.append(PUBGstats.matchAnalysis(player, matchData))
                 embed = makeEmbedSquad(P1, logs)
-                await channel.send('After Action Report Is Ready For Deployment! [BETA/TESTING][v0.7.0]')
-                await channel.send(embed=embed)
+                await squadChannel.send('After Action Report Is Ready For Deployment! [BETA/TESTING][v0.7.0]')
+                await squadChannel.send(embed=embed)
             else:
                 # if the game isn't solo, duo or squad (ex: war mode)
                 # then don't report and move on to the next playing player
