@@ -229,6 +229,15 @@ async def trackPUBGRounds():
 
             matchData = PUBGstats.getMatchInfo(currentMatchID) 
             roundType = PUBGstats.getRoundType(matchData)
+            mapName = PUBGstats.getMapName(matchData)
+            
+            # if the match was in the map 'Range',
+            # then it means that was not a battle royal 
+            # match, it was  training round.
+            # Don't report and continue to the
+            # next member
+            if mapName == 'Range_Main':
+                continue
 
             if roundType == 'solo-fpp' or roundType == 'solo':
                 P1 = PUBGstats.matchAnalysis(gameName, matchData)

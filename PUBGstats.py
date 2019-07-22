@@ -174,6 +174,11 @@ def getRoundType(matchData):
     gameMode = matchData['data']['attributes']['gameMode']
     return gameMode
 
+def getMapName(matchData):
+    
+    mapName = matchData['data']['attributes']['mapName']
+    return mapName
+    
 def getTeamMembersNames(player, mode, matchData):
     
     newestFile = getLastModfiedMatchFile()
