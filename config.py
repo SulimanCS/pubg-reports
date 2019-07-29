@@ -96,3 +96,24 @@ def setDiscordToken():
             CONFIGwriter = csv.writer(wCONFIG)
             CONFIGwriter.writerows(lists)
             
+def configChannels():
+
+    setRegistrationChannelID()
+    setSoloChannelID()
+    setDuoChannelID()
+    setSquadChannelID()
+
+def configTokens():
+
+    setDiscordToken()
+    setPUBGToken()
+
+def configAll():
+
+    setDiscordToken()
+    setPUBGToken()
+    setRegistrationChannelID()
+    setSoloChannelID()
+    setDuoChannelID()
+    setSquadChannelID()
+
