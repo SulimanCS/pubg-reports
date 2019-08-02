@@ -98,10 +98,13 @@ async def on_message(message):
         await message.channel.send('Lionel Messi')
 
     elif message.content.startswith('!top3'):
-        # TODO make TOP3 depends on who requested it
-        top3 = PUBGstats.getTopThreeKillRank()
-        string = '#1: {} with {} kills\n #2: {} with {} kills\n #3: {} with {} kills'.format(top3[0][0], top3[0][1], top3[1][0], top3[1][1], top3[2][0], top3[2][1])
-        await message.channel.send(string)
+        top3 = PUBGstats.getTopThreeKillRankUserSpecific(registration.getSpecificPlayer(message.author.name))
+        if top3 == None:
+            regChannel = client.get_channel(regChannelID)
+            await message.channel.send('**{}** is not registered, please register at the __**{}**__ channel to get the top 3 players of the last game you played'.format(message.author.name, regChannel.name))
+        else:
+            string = '#1: {} with {} kills\n #2: {} with {} kills\n #3: {} with {} kills'.format(top3[0][0], top3[0][1], top3[1][0], top3[1][1], top3[2][0], top3[2][1])
+            await message.channel.send(string)
 
     elif message.content.startswith('bye'):
         await message.channel.send('logging out!')

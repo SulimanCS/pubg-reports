@@ -160,6 +160,28 @@ def getTopThreeKillRank():
 
     return killLog
 
+def getTopThreeKillRankUserSpecific(player):
+
+    if player == None:
+        return None
+    killLog = []
+    P1, P2, P3 = None, None, None
+    matchData = getMatchInfo(getLatestMatchID(getPlayerInfo(player)))
+    for report in matchData['included']:
+        if report['type'] == 'participant':
+            if report['attributes']['stats']['killPlace'] == 1:
+                P1 = (report['attributes']['stats']['name'], report['attributes']['stats']['kills'])
+            if report['attributes']['stats']['killPlace'] == 2:
+                P2 = (report['attributes']['stats']['name'], report['attributes']['stats']['kills'])
+            if report['attributes']['stats']['killPlace'] == 3:
+                P3 = (report['attributes']['stats']['name'], report['attributes']['stats']['kills'])
+
+    killLog.append(P1)
+    killLog.append(P2)
+    killLog.append(P3)
+
+    return killLog
+
 def getRoundType(matchData):
 
     gameMode = matchData['data']['attributes']['gameMode']
