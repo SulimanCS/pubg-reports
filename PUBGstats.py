@@ -22,7 +22,6 @@ def getToken():
         TOKENSreader = csv.reader(TOKENS)
 
         for key in TOKENSreader:
-            #print(key[0])
             if key[0] == 'PUBGapi':
                 TOKEN = key[1]
 
@@ -54,9 +53,6 @@ def getPlayerInfo(player):
         return False
     r_dict = r.json()
 
-    #print(r.json())
-    #print(type(r_dict))
-
     filename = player + '.json'
     directory = os.path.dirname(__file__)
     filepath = os.path.join(directory, PLAYERDATA, filename)
@@ -75,7 +71,6 @@ def getLatestMatchID(playerProfile):
     except IndexError as error:
         print('Player ({}) has not played a single PUBG game yet, error: {}'.format(playerData['data'][0]['attributes']['name'], error))
         final = None
-    #print(final)
 
     return final
     
@@ -117,12 +112,8 @@ def matchAnalysis(player, matchData):
            'win-rank': None}
    
     for report in matchData['included']:
-        #print(report['type'])
         if report['type']== 'participant':
-            #print(True)
-            #print(report['attributes']['stats']['name'])
             if report['attributes']['stats']['name'] == player: 
-                #print('kills: {}'.format(report['attributes']['stats']['kills']))
                 log['name'] = report['attributes']['stats']['name']
                 log['kills'] = report['attributes']['stats']['kills']
                 log['knocks'] = report['attributes']['stats']['DBNOs']

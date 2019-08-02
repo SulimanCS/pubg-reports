@@ -7,3 +7,5 @@ notes.txt
 exampleCall.py
 test.py
 error.py
+matchdata/*.json
+playerdata/*.json

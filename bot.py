@@ -42,7 +42,6 @@ with open (filepath, 'r') as TOKENS:
     TOKENSreader = csv.reader(TOKENS)
 
     for key in TOKENSreader:
-        #print(key[0])
         if key[0] == 'discordPUBGbot':
             TOKEN = key[1]
 
@@ -107,14 +106,7 @@ async def on_message(message):
     elif message.content.startswith('bye'):
         await message.channel.send('logging out!')
         await client.logout()
-    #ch = message.channel
-    #print(type(ch))
-    #await ch.send('hi')
-    '''
-    channel = client.get_channel(591227619928702979)
-    print(channel)
-    await channel.send('test')
-    '''
+
 def formatLog(log):
 
     if log['walk-distance'] >= 1000:
@@ -133,11 +125,7 @@ def getPlayingMembers(members):
     
 
     global playingMembers, gamesIDs 
-    #print(bool(playingMembers))
     for member in members:
-        print(member.name)
-        #print(member.status)
-        #print(type(str(member.status)))
 
         gameName = getPUBGName(member.name)
         if gameName == None:
@@ -147,24 +135,18 @@ def getPlayingMembers(members):
             if len(member.activities) == 0:
                 del playingMembers[member.name]
             else:
-                print('check if in PUBG or not')
                 for activity in member.activities:
-                    print(activity.name)
-                    print(type(activity))
                     isPlaying = False
                     if activity.name == PUBG:
                         isPlaying = True 
                         break 
-                #print('after for loop') 
                 if isPlaying == False:
                     del playingMembers[member.name]
 
             continue 
 
         if member.bot == True or str(member.status) == 'offline' or len(member.activities) == 0:
-            print('continue hit')
             continue
-        #print(member)
 
         # If the program logic reached this stage
         # then it means that a new player has been
@@ -175,33 +157,13 @@ def getPlayingMembers(members):
                 gameName = getPUBGName(member.name)
                 playerProfile = PUBGstats.getPlayerInfo(gameName)
                 matchID = PUBGstats.getLatestMatchID(playerProfile)
-                #print(gameName)
                 playingMembers[member.name] = matchID
                 gamesIDs.add(matchID)
                 break 
-        '''
-        gameName = getPUBGName(member.name)
-        matchID = PUBGstats.getLatestMatchID(gameName)
-        #print(gameName)
-        playingMembers[member.name] = matchID
-        gamesIDs.add(matchID)
-        '''
- 
-    
-    #print(bool(playingMembers))
-    #print(playingMembers)
 
 def getPUBGName(name):
 
     return registration.getSpecificPlayer(name)
-    '''
-    if name == 'suli':
-        return 'stx0'
-    elif name == 'jok':
-        return 'kojx'
-    else:
-        return None
-    '''
 
 async def trackPUBGRounds():
     
@@ -218,18 +180,11 @@ async def trackPUBGRounds():
 
     while True:
         getPlayingMembers(client.get_all_members())
-        print('===========================================')
 
-        #playingMembers['suli'] = '6c0f67d9-800a-4ac2-8588-6d2bbdd7c09b'
-        #playingMembers['jok'] = '6c0f67588-6d2bbdd7c09b'
-
-        print('before: {}'.format(playingMembers))
         for player in playingMembers.keys():
-            print('member: {}'.format(player))
             gameName = getPUBGName(player)
 
             if gameName == None:
-                print('continue hit 2')
                 continue
            
             playerProfile = PUBGstats.getPlayerInfo(gameName)
@@ -241,14 +196,10 @@ async def trackPUBGRounds():
             if playingMembers[player] == currentMatchID or currentMatchID in gamesIDs:
                 if currentMatchID in gamesIDs:
                     playingMembers[player] = currentMatchID
-                    print('continue hit 3')
-                else:
-                    print('continue hit 4')
                 continue
             
             gamesIDs.add(currentMatchID)
             playingMembers[player] = currentMatchID
-            print('current match ID: {}'.format(currentMatchID))
 
             matchData = PUBGstats.getMatchInfo(currentMatchID) 
             roundType = PUBGstats.getRoundType(matchData)
@@ -292,7 +243,6 @@ async def trackPUBGRounds():
                 # then don't report and move on to the next playing player
                 continue
 
-        print('after: {}'.format(playingMembers))
         print('waiting for 60 seconds')
         await asyncio.sleep(60)
 
@@ -346,8 +296,6 @@ def makeEmbedDuo(P1, P2):
 
 def makeEmbedSquad(P1, logs):
   
-    print(logs)
-    #return
     originalP1 = P1.copy()
     P1 = formatLog(P1)
 
@@ -406,4 +354,3 @@ client.loop.create_task(trackPUBGRounds())
 client.run(TOKEN)
 
 
-#print(client.user)

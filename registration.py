@@ -27,7 +27,6 @@ def registerPlayer(discordName, PUBGName):
     result = checkRegistration(discordName, PUBGName)
 
     isPUBGPlayer = PUBGstats.getPlayerInfo(PUBGName)
-    #print(isPUBGPlayer)
     if isPUBGPlayer == False:
         result = -1
 
