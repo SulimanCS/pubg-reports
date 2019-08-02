@@ -224,6 +224,7 @@ def getTeamMembersNames(player, mode, matchData):
         if currentPlayerTeamID == None:
             # if player not found, exit
             return None
+        squad = None
         for report in matchData['included']:
             if report['type']== 'roster':
                 if len(report['relationships']['participants']['data']) == 1:
@@ -233,7 +234,6 @@ def getTeamMembersNames(player, mode, matchData):
                         # any partners
                         return None
                 else:
-                    squad = None
                     for player in report['relationships']['participants']['data']:
                         if player['id'] == currentPlayerTeamID:
                             squad = report['relationships']['participants']['data']
