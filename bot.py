@@ -219,7 +219,7 @@ async def trackPUBGRounds():
             if roundType == 'solo-fpp' or roundType == 'solo':
                 P1 = PUBGstats.matchAnalysis(gameName, matchData)
                 embed = makeEmbedSolo(P1)
-                await soloChannel.send('After Action Report Is Ready For Deployment! [BETA/TESTING][v0.7.0]')
+                await soloChannel.send('Post Match Report Is Ready For Deployment! [BETA]')
                 await soloChannel.send(embed=embed)
                 #continue
             elif roundType == 'duo-fpp' or roundType == 'duo':
@@ -227,7 +227,7 @@ async def trackPUBGRounds():
                 P2name = PUBGstats.getTeamMembersNames(P1['name'], 'duo', matchData)
                 P2 = PUBGstats.matchAnalysis(P2name, matchData)
                 embed = makeEmbedDuo(P1, P2)
-                await duoChannel.send('After Action Report Is Ready For Deployment! [BETA/TESTING][v0.7.0]')
+                await duoChannel.send('Post Match Report Is Ready For Deployment! [BETA]')
                 await duoChannel.send(embed=embed)
 
             elif roundType == 'squad-fpp' or roundType == 'squad':
@@ -239,7 +239,7 @@ async def trackPUBGRounds():
                     for player in P1squad:
                         logs.append(PUBGstats.matchAnalysis(player, matchData))
                 embed = makeEmbedSquad(P1, logs)
-                await squadChannel.send('After Action Report Is Ready For Deployment! [BETA/TESTING][v0.7.0]')
+                await squadChannel.send('Post Match Report Is Ready For Deployment! [BETA]')
                 await squadChannel.send(embed=embed)
             else:
                 # if the game isn't solo, duo or squad (ex: war mode)
